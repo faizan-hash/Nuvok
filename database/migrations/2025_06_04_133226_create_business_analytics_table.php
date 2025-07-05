@@ -1,0 +1,63 @@
+<<<<<<< HEAD
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('business_analytics', function (Blueprint $table) {
+            $table->id();
+            $table->integer('income')->nullable();
+            $table->integer('expense')->nullable();
+            $table->integer('total_balance')->nullable();
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('business_analytics');
+    }
+};
+=======
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('business_analytics', function (Blueprint $table) {
+            $table->id();
+            $table->integer('income')->nullable();
+            $table->integer('expense')->nullable();
+            $table->integer('total_balance')->nullable();
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('business_analytics');
+    }
+};
+>>>>>>> f4799b86f474e344473c5131907406fc349bf0dc
