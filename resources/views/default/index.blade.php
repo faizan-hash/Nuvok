@@ -12,12 +12,9 @@
 
     @includeWhen($fSectSettings->tools_active == 1, 'landing-page.tools.section')
 
-<<<<<<< HEAD
     {{-- Industry Use Cases section --}}
     @include('landing-page.industry-use-cases.section')
 
-=======
->>>>>>> f4799b86f474e344473c5131907406fc349bf0dc
     @includeWhen($fSectSettings->how_it_works_active == 1, 'landing-page.how-it-works.section')
 
     @includeWhen($fSectSettings->testimonials_active == 1, 'landing-page.testimonials.section')

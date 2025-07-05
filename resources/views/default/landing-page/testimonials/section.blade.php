@@ -46,20 +46,6 @@
 
                         </div>
                     </div>
-<<<<<<< HEAD
-=======
-                    <div class="flex justify-center gap-20 opacity-80 max-lg:gap-12 max-sm:gap-4">
-                        @foreach ($clients as $entry)
-                            <img
-                                class="h-full w-full object-cover object-center"
-                                style="max-width: 48px; max-height: 48px;"
-                                src="{{ url('') . isset($entry->avatar) ? (str_starts_with($entry->avatar, 'asset') ? custom_theme_url($entry->avatar) : '/clientAvatar/' . $entry->avatar) : custom_theme_url('assets/img/auth/default-avatar.png') }}"
-                                alt="{{ __($entry->alt) }}"
-                                title="{{ __($entry->title) }}"
-                            >
-                        @endforeach
-                    </div>
->>>>>>> f4799b86f474e344473c5131907406fc349bf0dc
                 </div>
             </div>
         </div>

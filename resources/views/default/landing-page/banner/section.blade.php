@@ -8,20 +8,10 @@
     <div class="container relative"  style="background-color: #1C2A39;">
         <div style="margin-top:50px" class=" mx-auto flex w-1/2 flex-col items-center max-lg:w-2/3 max-md:w-full">
             <h6 style="color:white;"
-<<<<<<< HEAD
                 class="relative mb-8 rounded-2xl bg-white bg-opacity-10 px-3 py-1">
                 <span class="relative">{!! __($setting->site_name) !!}</span>
                 <span class="dot relative"></span>
                 <span class="relative">{!! __($fSetting->hero_subtitle) !!}</span>
-=======
-                class="relative mb-8 translate-y-6 overflow-hidden rounded-2xl bg-white bg-opacity-15 px-3 py-1 text-white opacity-0 blur-lg transition-all ease-out group-[.page-loaded]/body:translate-y-0 group-[.page-loaded]/body:opacity-100 group-[.page-loaded]/body:blur-0">
-                <div class="banner-subtitle-gradient absolute -inset-3 blur-3xl transition-all duration-500 group-[.page-loaded]/body:opacity-0">
-                    <div class="animate-hue-rotate absolute inset-0 bg-gradient-to-br from-violet-600 to-red-500"></div>
-                </div>
-                <span class="relative ">{!! __($setting->site_name) !!}</span>
-                <span class="dot relative"></span>
-                <span class="relative ">{!! __($fSetting->hero_subtitle) !!}</span>
->>>>>>> f4799b86f474e344473c5131907406fc349bf0dc
             </h6>
             <div class="banner-title-wrap relative">
                 <h1 style="color:white;"
@@ -30,14 +20,8 @@
                     AI-Powered Human-Centered
                     @if ($fSetting->hero_title_text_rotator != null)
                         <span class="lqd-text-rotator inline-grid grid-cols-1 grid-rows-1 transition-[width] duration-200">
-<<<<<<< HEAD
                             @php
                                 $keywords = explode(',', __($fSetting->hero_title_text_rotator));
-=======
-                            @php 
-                            $keywords=explode(',', __($fSetting->hero_title_text_rotator));
-                            $keywords[] = 'Business';
->>>>>>> f4799b86f474e344473c5131907406fc349bf0dc
                             @endphp
                             @foreach ($keywords as $keyword)
                                 <span

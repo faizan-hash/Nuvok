@@ -1,0 +1,55 @@
+{
+  "_clipboard-21e7cc50.js": {
+    "file": "assets/clipboard-21e7cc50.js"
+  },
+  "_pusher-32a7bc32.js": {
+    "file": "assets/pusher-32a7bc32.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/laravel-echo/dist/echo.js": {
+    "file": "assets/echo-4c3fda6b.js",
+    "isDynamicEntry": true,
+    "src": "node_modules/laravel-echo/dist/echo.js"
+  },
+  "public/themes/default/assets/img/bg/blob-1.png": {
+    "file": "assets/blob-1-46b7ff72.png",
+    "src": "public/themes/default/assets/img/bg/blob-1.png"
+  },
+  "resources/views/default/js/app.js": {
+    "dynamicImports": [
+      "node_modules/laravel-echo/dist/echo.js",
+      "_pusher-32a7bc32.js"
+    ],
+    "file": "assets/app-ed2d45c8.js",
+    "imports": [
+      "_clipboard-21e7cc50.js"
+    ],
+    "isEntry": true,
+    "src": "resources/views/default/js/app.js"
+  },
+  "resources/views/default/js/chatbotApp.css": {
+    "file": "assets/chatbotApp-ed4f890e.css",
+    "src": "resources/views/default/js/chatbotApp.css"
+  },
+  "resources/views/default/js/chatbotApp.js": {
+    "css": [
+      "assets/chatbotApp-ed4f890e.css"
+    ],
+    "file": "assets/chatbotApp-c59a0142.js",
+    "imports": [
+      "_clipboard-21e7cc50.js"
+    ],
+    "isEntry": true,
+    "src": "resources/views/default/js/chatbotApp.js"
+  },
+  "resources/views/default/scss/dashboard.scss": {
+    "file": "assets/dashboard-58856ee4.css",
+    "isEntry": true,
+    "src": "resources/views/default/scss/dashboard.scss"
+  },
+  "resources/views/default/scss/landing-page.scss": {
+    "file": "assets/landing-page-77e4ea04.css",
+    "isEntry": true,
+    "src": "resources/views/default/scss/landing-page.scss"
+  }
+}
