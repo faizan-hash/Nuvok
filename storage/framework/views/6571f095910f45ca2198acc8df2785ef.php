@@ -453,12 +453,7 @@
                 </div>
 
                 <!-- Toggle Switch removed -->
-                {{--
-                <div class="tabs-triggers">
-                    <button id="monthly-toggle" class="active">Monthly</button>
-                    <button id="annual-toggle">Annual <span class="save-badge">Save 20%</span></button>
-                </div>
-                --}}
+                
 
                 <!-- Pricing Table -->
                 <div class="lqd-tabs-content-wrap">
@@ -906,3 +901,4 @@
 </html>
 
 
+<?php /**PATH F:\DELL\Desktop\Novuk\resources\views/default/landing-page/pricing/section.blade.php ENDPATH**/ ?>

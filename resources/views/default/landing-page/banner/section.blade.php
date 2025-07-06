@@ -15,38 +15,42 @@
             </h6>
             <div class="banner-title-wrap relative">
                 <h1 style="color:white;"
-                    class="banner-title mb-7 translate-y-7 font-body font-bold -tracking-wide text-white opacity-0 transition-all ease-out group-[.page-loaded]/body:translate-y-0 group-[.page-loaded]/body:opacity-100">
+                    class="banner-title mb-7 translate-y-7 font-body font-bold -tracking-wide text-white opacity-0 transition-all ease-out group-[.page-loaded]/body:translate-y-0 group-[.page-loaded]/body:opacity-100"
+                    id="dynamic-hero-text">
                     <!--{!! __($fSetting->hero_title) !!}-->
                     AI-Powered Human-Centered
-                    @if ($fSetting->hero_title_text_rotator != null)
-                        <span class="lqd-text-rotator inline-grid grid-cols-1 grid-rows-1 transition-[width] duration-200">
-                            @php
-                                $keywords = explode(',', __($fSetting->hero_title_text_rotator));
-                            @endphp
-                            @foreach ($keywords as $keyword)
-                                <span
-                                    class="lqd-text-rotator-item {{ $loop->first ? 'lqd-is-active' : '' }} col-start-1 row-start-1 inline-flex translate-x-3 opacity-0 blur-sm transition-all duration-300 [&.lqd-is-active]:translate-x-0 [&.lqd-is-active]:opacity-100 [&.lqd-is-active]:blur-0"
-                                >
-                                    <span>{!! $keyword !!}</span>
-                                </span>
-                            @endforeach
-                        </span>
-                    @endif
-                    <svg
-                        class="lqd-split-text-words inline transition-all duration-[2850ms]"
-                        width="47"
-                        height="62"
-                        viewBox="0 0 47 62"
-                        fill="currentColor"
-                        xmlns="http://www.w3.org/2000/svg"
-                    >
-                        <path d="M27.95 0L0 38.213H18.633V61.141L46.583 22.928H27.95V0Z" />
-                    </svg>
+                    <span class="inline-flex items-center gap-2 whitespace-nowrap sm:flex-nowrap flex-wrap justify-center">
+                        @if ($fSetting->hero_title_text_rotator != null)
+                            <span class="lqd-text-rotator inline-grid grid-cols-1 grid-rows-1 transition-[width] duration-200">
+                                @php
+                                    $keywords = explode(',', __($fSetting->hero_title_text_rotator));
+                                @endphp
+                                @foreach ($keywords as $keyword)
+                                    <span
+                                        class="lqd-text-rotator-item {{ $loop->first ? 'lqd-is-active' : '' }} col-start-1 row-start-1 inline-flex translate-x-3 opacity-0 blur-sm transition-all duration-300 [&.lqd-is-active]:translate-x-0 [&.lqd-is-active]:opacity-100 [&.lqd-is-active]:blur-0"
+                                    >
+                                        <span class="whitespace-nowrap">{!! $keyword !!}</span>
+                                    </span>
+                                @endforeach
+                            </span>
+                        @endif
+                        <svg
+                            class="lqd-split-text-words transition-all duration-[2850ms] max-sm:!w-5 max-sm:!h-7 shrink-0"
+                            width="47"
+                            height="62"
+                            viewBox="0 0 47 62"
+                            fill="currentColor"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path d="M27.95 0L0 38.213H18.633V61.141L46.583 22.928H27.95V0Z" />
+                        </svg>
+                    </span>
                 </h1>
             </div>
               <!--text="{!! __($fSetting->hero_description) !!}"-->
             <p
-                class="mb-7 w-3/4 text-[20px] leading-[1.25em] text-fuchsia-700 max-sm:w-full [&_.lqd-split-text-words]:translate-y-3 [&_.lqd-split-text-words]:opacity-0 [&_.lqd-split-text-words]:transition-all [&_.lqd-split-text-words]:ease-out group-[.page-loaded]/body:[&_.lqd-split-text-words]:translate-y-0 group-[.page-loaded]/body:[&_.lqd-split-text-words]:text-white group-[.page-loaded]/body:[&_.lqd-split-text-words]:opacity-100">
+                class="mb-7 w-3/4 text-[20px] leading-[1.25em] text-white max-sm:w-full [&_.lqd-split-text-words]:translate-y-3 [&_.lqd-split-text-words]:opacity-0 [&_.lqd-split-text-words]:transition-all [&_.lqd-split-text-words]:ease-out group-[.page-loaded]/body:[&_.lqd-split-text-words]:translate-y-0 group-[.page-loaded]/body:[&_.lqd-split-text-words]:text-white group-[.page-loaded]/body:[&_.lqd-split-text-words]:opacity-100"
+                id="dynamic-hero-subtitle">
                 <x-split-words
                  text="Run your business with one smart platform — from content and clients to billing and automation."
                   
@@ -120,3 +124,5 @@
         </svg>
     </div>
 </section>
+
+<script src="{{ custom_theme_url('/assets/js/geolocation.js') }}" defer></script>

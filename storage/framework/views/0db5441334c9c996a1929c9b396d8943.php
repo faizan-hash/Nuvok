@@ -1,4 +1,5 @@
-    {!! adsense_how_it_works_728x90() !!}
+    <?php echo adsense_how_it_works_728x90(); ?>
+
     <section
         class="site-section py-10 transition-all duration-700 md:translate-y-8 md:opacity-0 [&.lqd-is-in-view]:translate-y-0 [&.lqd-is-in-view]:opacity-100"
         id="how-it-works"
@@ -6,7 +7,7 @@
         <div class="container">
             <div
                 class="rounded-[50px] bg-[#010101] bg-cover p-10 py-24 text-white text-opacity-60 shadow-xl max-sm:bg-bottom max-sm:px-5"
-                style="background-image: url({{ custom_theme_url('assets/img/landing-page/steps-bg.jpg') }});"
+                style="background-image: url(<?php echo e(custom_theme_url('assets/img/landing-page/steps-bg.jpg')); ?>);"
             >
                 <div class="mx-auto mb-14 w-2/5 text-center max-xl:w-1/2 max-lg:w-8/12 max-md:w-full">
                     <h2 class="text-[48px] leading-none text-[#E5E6E6] max-sm:text-[32px]">Here’s How It Works (in 3 Simple Steps)</h2>
@@ -31,3 +32,4 @@
             </div>
         </div>
     </section>
+<?php /**PATH F:\DELL\Desktop\Novuk\resources\views/default/landing-page/how-it-works/section.blade.php ENDPATH**/ ?>

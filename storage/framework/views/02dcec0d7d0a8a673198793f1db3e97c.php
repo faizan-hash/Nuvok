@@ -1,6 +1,4 @@
-@extends('panel.layout.app', ['layout_wide' => true, 'wide_layout_px' => 'px-0'])
-
-@section('content')
+<?php $__env->startSection('content'); ?>
     <style>
         .login-container {
             background: linear-gradient(135deg, #f0f4f8, #d1e0ed);
@@ -55,22 +53,22 @@
         <div class="login-container text-gray-800">
             <div class="login-box">
                 <div class="logo-container mb-8">
-                    <a class="navbar-brand flex items-center justify-center mb-4" href="{{ route('index') }}">
-                        @if (isset($setting->logo_dashboard) && isset($setting->logo_dashboard_path))
+                    <a class="navbar-brand flex items-center justify-center mb-4" href="<?php echo e(route('index')); ?>">
+                        <?php if(isset($setting->logo_dashboard) && isset($setting->logo_dashboard_path)): ?>
                             <img class="h-12 w-auto"
-                                src="{{ custom_theme_url($setting->logo_dashboard_path, true) }}"
-                                @if (isset($setting->logo_dashboard_2x_path) && !empty($setting->logo_dashboard_2x_path)) srcset="/{{ $setting->logo_dashboard_2x_path }} 2x" @endif
-                                alt="{{ $setting->site_name }}">
-                        @else
+                                src="<?php echo e(custom_theme_url($setting->logo_dashboard_path, true)); ?>"
+                                <?php if(isset($setting->logo_dashboard_2x_path) && !empty($setting->logo_dashboard_2x_path)): ?> srcset="/<?php echo e($setting->logo_dashboard_2x_path); ?> 2x" <?php endif; ?>
+                                alt="<?php echo e($setting->site_name); ?>">
+                        <?php else: ?>
                             <img class="h-12 w-auto"
-                                src="{{ custom_theme_url($setting->logo_path, true) }}"
-                                @if (isset($setting->logo_2x_path) && !empty($setting->logo_2x_path)) srcset="/{{ $setting->logo_2x_path }} 2x" @endif
-                                alt="{{ $setting->site_name }}">
-                        @endif
+                                src="<?php echo e(custom_theme_url($setting->logo_path, true)); ?>"
+                                <?php if(isset($setting->logo_2x_path) && !empty($setting->logo_2x_path)): ?> srcset="/<?php echo e($setting->logo_2x_path); ?> 2x" <?php endif; ?>
+                                alt="<?php echo e($setting->site_name); ?>">
+                        <?php endif; ?>
                     </a>
                 </div>
                 <div class="login-form hide-sign-text">
-                    @yield('form')
+                    <?php echo $__env->yieldContent('form'); ?>
                 </div>
             </div>
         </div>
@@ -85,4 +83,6 @@
             }
         });
     </script>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('panel.layout.app', ['layout_wide' => true, 'wide_layout_px' => 'px-0'], \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH F:\DELL\Desktop\Novuk\resources\views/default/panel/authentication/layout/app.blade.php ENDPATH**/ ?>

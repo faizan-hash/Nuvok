@@ -21,25 +21,28 @@
             <div class="mx-auto w-1/2 text-center max-lg:w-10/12 max-sm:w-full">
                 <p class="mb-9 text-[10px] font-semibold uppercase tracking-widest">
                     <span style="color:white;" class="!me-2 inline-block rounded-xl bg-[#262626] px-3 py-1">
-                        {{ __($setting->site_name) }}
+                        <?php echo e(__($setting->site_name)); ?>
+
                     </span>
-                    <!--{{ __($fSetting->footer_text_small) }}-->
+                    <!--<?php echo e(__($fSetting->footer_text_small)); ?>-->
                 </p>
                 <p
                     class="-from-[5%] mb-8 bg-gradient-to-br from-transparent to-white to-50% bg-clip-text font-heading text-[100px] font-bold leading-none tracking-tight text-transparent max-sm:text-[18vw]">
                     Start Your Free Trial
-                    <!--{{ __($fSetting->footer_header) }}-->
+                    <!--<?php echo e(__($fSetting->footer_header)); ?>-->
                 </p>
                 <p style="color:white;" class="mb-9 px-10 font-heading text-[20px] font-normal leading-[1.25em]">
-                    {{ __($fSetting->footer_text) }}
+                    <?php echo e(__($fSetting->footer_text)); ?>
+
                 </p>
               <a
                 style="margin-bottom:22px"
                 class="custom-footer-button"
-                href="{{ !empty($fSetting->footer_button_url) ? $fSetting->footer_button_url : '#' }}"
+                href="<?php echo e(!empty($fSetting->footer_button_url) ? $fSetting->footer_button_url : '#'); ?>"
                 target="_blank"
             >
-                {!! __($fSetting->footer_button_text) !!}
+                <?php echo __($fSetting->footer_button_text); ?>
+
                 <span class="relative z-10 ms-2 inline-flex items-center">
                     <svg
                         width="11"
@@ -59,60 +62,65 @@
         <hr class="border-white border-opacity-15">
         <div class="container">
             <div style="color:white;" class="flex flex-wrap items-center justify-between gap-8 pb-7 pt-10 max-sm:justify-center">
-                <a href="{{ route('index') }}">
-                    @if (isset($setting->logo_2x_path))
+                <a href="<?php echo e(route('index')); ?>">
+                    <?php if(isset($setting->logo_2x_path)): ?>
                         <img
-                            src="{{ custom_theme_url($setting->logo_path, true) }}"
-                            srcset="/{{ $setting->logo_2x_path }} 2x"
-                            alt="{{ $setting->site_name }} logo"
+                            src="<?php echo e(custom_theme_url($setting->logo_path, true)); ?>"
+                            srcset="/<?php echo e($setting->logo_2x_path); ?> 2x"
+                            alt="<?php echo e($setting->site_name); ?> logo"
                             style=" width: 130px; height: 100px;"
                         >
-                    @else
+                    <?php else: ?>
                         <img
-                            src="{{ custom_theme_url($setting->logo_path, true) }}"
-                            alt="{{ $setting->site_name }} logo"
+                            src="<?php echo e(custom_theme_url($setting->logo_path, true)); ?>"
+                            alt="<?php echo e($setting->site_name); ?> logo"
                             style=" width: 130px; height: 100px;"
                         >
-                    @endif
+                    <?php endif; ?>
                 </a>
                 <ul class="flex flex-wrap items-center gap-7 text-[14px] max-sm:justify-center">
-                    @foreach (\App\Models\SocialMediaAccounts::where('is_active', true)->get() as $social)
+                    <?php $__currentLoopData = \App\Models\SocialMediaAccounts::where('is_active', true)->get(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $social): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <li>
                             <a
                                 class="inline-flex items-center gap-2"
-                                href="{{ $social['link'] }}"
+                                href="<?php echo e($social['link']); ?>"
                             >
                                 <span class="w-3.5 [&_svg]:h-auto [&_svg]:w-full">
-                                    {!! $social['icon'] !!}
+                                    <?php echo $social['icon']; ?>
+
                                 </span>
-                                {{ $social['title'] }}
+                                <?php echo e($social['title']); ?>
+
                             </a>
                         </li>
-                    @endforeach
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </ul>
 
                 <ul class="flex flex-wrap items-center gap-7 text-[14px] max-sm:justify-center">
-                    @foreach (\App\Models\Page::where(['status' => 1, 'show_on_footer' => 1])->get() ?? [] as $page)
+                    <?php $__currentLoopData = \App\Models\Page::where(['status' => 1, 'show_on_footer' => 1])->get() ?? []; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $page): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <li>
                             <a
                                 class="inline-flex items-center gap-2"
-                                href="/page/{{ $page->slug }}"
+                                href="/page/<?php echo e($page->slug); ?>"
                             >
-                                {{ $page->title }}
+                                <?php echo e($page->title); ?>
+
                             </a>
                         </li>
-                    @endforeach
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </ul>
             </div>
             <hr class="border-white border-opacity-15">
             <div class="flex flex-wrap items-center justify-center gap-4 py-9 max-sm:text-center">
                 <p
                     class="!text-end text-[14px] opacity-60"
-                    style="color: {{ $fSetting->footer_text_color }};"
+                    style="color: <?php echo e($fSetting->footer_text_color); ?>;"
                 >
-                    {{ date('Y') . ' ' . $setting->site_name . '. ' . __($fSetting->footer_copyright) }}
+                    <?php echo e(date('Y') . ' ' . $setting->site_name . '. ' . __($fSetting->footer_copyright)); ?>
+
                 </p>
             </div>
         </div>
     </div>
 </footer>
+<?php /**PATH F:\DELL\Desktop\Novuk\resources\views/default/layout/footer.blade.php ENDPATH**/ ?>

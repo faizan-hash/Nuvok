@@ -432,7 +432,13 @@
 
 <body>
 
-    <div class="wrap">
+    @if ($template->has_background)
+        @if ($template->background_type === 'image')
+            <div class="absolute inset-x-0 bottom-0 h-1/2 bg-white"></div>
+        @endif
+    @endif
+
+    <div class="wrap" style="color: {{ $template->text_color }};">
 
         <div class="top-logo">
             <figure class="brand-logo">
@@ -449,8 +455,19 @@
 
                 <div class="content-indent">
 
+                    @if ($template->has_background)
+                        @if ($template->background_type === 'image')
+                            <div class="absolute inset-x-0 bottom-0 h-1/2 bg-white"></div>
+                        @endif
+                    @endif
+
                     @php
-                        $template->content = str_replace(['{site_name}', '{site_url}', '{reset_url}', '{affiliate_url}', '{user_name}', '{user_activation_url}'], [$settings->site_name, $settings->site_url, $settings->site_url . '/forgot-password/retrieve/' . $user->password_reset_code, $settings->site_url . '/register?aff=' . $user->affiliate_code, $user->name, $settings->site_url . '/confirm/email/' . $user->email_confirmation_code], $template->content);
+                        $reset_url = url('/password/reset/' . $user->password_reset_code);
+                        $template->content = str_replace(
+                            ['{site_name}', '{site_url}', '{reset_url}', '{affiliate_url}', '{user_name}', '{user_activation_url}'],
+                            [$settings->site_name, $settings->site_url, $reset_url, $settings->site_url . '/register?aff=' . $user->affiliate_code, $user->name, $settings->site_url . '/confirm/email/' . $user->email_confirmation_code],
+                            $template->content
+                        );
                     @endphp
 
                     {!! $template->content !!}
