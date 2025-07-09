@@ -160,19 +160,19 @@
     <!--<script src="{{ custom_theme_url('/assets/libs/underscore/underscore-umd-min.js') }}"></script>-->
     @include('panel.layout.scripts')
 
-    <!--@if (session()->has('message'))-->
-    <!--    <script>-->
-    <!--        toastr.{{ session('type') }}('{{ session('message') }}');-->
-    <!--    </script>-->
-    <!--@endif-->
+    @if (session()->has('message'))
+        <script>
+            toastr.{{ session('type') }}('{{ session('message') }}');
+        </script>
+    @endif
 
-    <!--@if ($errors->any())-->
-    <!--    <script>-->
-    <!--        @foreach ($errors->all() as $error)-->
-    <!--            toastr.error('{{ $error }}');-->
-    <!--        @endforeach-->
-    <!--    </script>-->
-    <!--@endif-->
+    @if ($errors->any())
+        <script>
+            @foreach ($errors->all() as $error)
+                toastr.error('{{ $error }}');
+            @endforeach
+        </script>
+    @endif
 
     @auth
         {{--        <script type="module"> --}}
@@ -222,7 +222,9 @@
 
     @livewireScriptConfig()
 
-    @include('panel.layout.includes.lazy-intercom')
+    @if (!request()->routeIs('login') && !request()->routeIs('register'))
+        @include('panel.layout.includes.lazy-intercom')
+    @endif
 
     @auth
         @include('panel.layout.includes.subscription-status')

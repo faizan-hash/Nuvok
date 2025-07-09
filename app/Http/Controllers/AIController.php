@@ -400,7 +400,7 @@ class AIController extends Controller
             $custom_template = OpenAIGenerator::find($request->openai_id);
 
             $find = ['{{open house info}}'];
-            $replace = [$request->all()['open-house-info']];
+            $replace = [$request->input('open-house-info', '')];
             
             $prompt = str_replace($find, $replace, $custom_template->prompt);
 

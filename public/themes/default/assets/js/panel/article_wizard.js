@@ -308,44 +308,57 @@ $( document ).on( 'click', '.image_', function () {
 	updateData();
 } );
 
+// Global configurations and helper functions
+function showLoading() {
+    if (Alpine.store('appLoadingIndicator')) {
+        Alpine.store('appLoadingIndicator').show();
+    }
+}
+
+function hideLoading() {
+    if (Alpine.store('appLoadingIndicator')) {
+        Alpine.store('appLoadingIndicator').hide();
+    }
+}
+
 function generateData() {
-	if ( isGenerating ) {
+	if (isGenerating) {
 		return;
 	}
 	let wizardData = { ...CUR_STATE };
-	if ( wizardData.current_step == 0 ) {
-		if ( $( '#txtforkeyword' ).val() == '' ) {
-			toastr.warning( 'Please input topic' );
+	if (wizardData.current_step == 0) {
+		if ($('#txtforkeyword').val() == '') {
+			toastr.warning('Please input topic');
 			return;
 		}
 		isGenerating = true;
-		Alpine.store('appLoadingIndicator').show();
+		showLoading();
 		let wizardData = { ...CUR_STATE };
-		wizardData.topic_keywords = $( '#txtforkeyword' ).val();
+		wizardData.topic_keywords = $('#txtforkeyword').val();
 		CUR_STATE = { ...wizardData };
 		updateData();
 		generateKeywords();
-	} else if ( wizardData.current_step == 1 ) {
+	} else if (wizardData.current_step == 1) {
 		isGenerating = true;
-		Alpine.store('appLoadingIndicator').show();
+		showLoading();
 		let wizardData = { ...CUR_STATE };
-		wizardData.topic_title = $( '#txtfortitle' ).val();
+		wizardData.topic_title = $('#txtfortitle').val();
 		CUR_STATE = { ...wizardData };
 		updateData();
 		generateTitles();
-	} else if ( wizardData.current_step == 2 ) {
+	} else if (wizardData.current_step == 2) {
 		isGenerating = true;
-		Alpine.store('appLoadingIndicator').show();
+		showLoading();
 		let wizardData = { ...CUR_STATE };
-		wizardData.topic_outline = $( '#txtforoutline' ).val();
+		wizardData.topic_outline = $('#txtforoutline').val();
 		CUR_STATE = { ...wizardData };
 		updateData();
 		generateOutlines();
-	} else if ( wizardData.current_step == 3 ) {
+	} else if (wizardData.current_step == 3) {
 		isGenerating = true;
-		Alpine.store('appLoadingIndicator').show();
+		showLoading();
 		let wizardData = { ...CUR_STATE };
-		wizardData.topic_image = $( '#txtforimage' ).val();
+		wizardData.topic_image = $('#txtforimage').val();
 		CUR_STATE = { ...wizardData };
 		updateData();
 		generateImages();
@@ -417,12 +430,12 @@ function generateKeywords() {
 			isGenerating = false;
 			updateData();
 		}
-		Alpine.store('appLoadingIndicator').hide();
+		hideLoading();
 	};
 
 	let error_function = ( data ) => {
 		isGenerating = false;
-		Alpine.store('appLoadingIndicator').hide();
+		hideLoading();
 		updateData();
 		console.log( data );
 		toastr.error( data.responseJSON.message );
@@ -526,12 +539,12 @@ function generateTitles() {
 			isGenerating = false;
 			updateData();
 		}
-		Alpine.store('appLoadingIndicator').hide();
+		hideLoading();
 	};
 
 	let error_function = ( data ) => {
 		isGenerating = false;
-		Alpine.store('appLoadingIndicator').hide();
+		hideLoading();
 		updateData();
 		console.log( data );
 		toastr.error( data.responseJSON.message );
@@ -621,13 +634,13 @@ function generateOutlines() {
 			toastr.error( 'OpenAI Error while generating outline.' );
 			updateData();
 		}
-		Alpine.store('appLoadingIndicator').hide();
+		hideLoading();
 	};
 
 	let error_function = ( data ) => {
 		toastr.error( data.message );
 		isGenerating = false;
-		Alpine.store('appLoadingIndicator').hide();
+		hideLoading();
 		updateData();
 	};
 

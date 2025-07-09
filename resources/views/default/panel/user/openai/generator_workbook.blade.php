@@ -488,7 +488,9 @@
             const typingEl = typingTemplate.firstElementChild;
             const workbook_regenerate = document.querySelector('#workbook_regenerate');
             const chatbotFrontModelElement = document.getElementById('chatbot_front_model');
-            Alpine.store('appLoadingIndicator').show();
+            if (window.Alpine && Alpine.store && Alpine.store('appLoadingIndicator')) {
+                Alpine.store('appLoadingIndicator').show();
+            }
             submitBtn.classList.add('lqd-form-submitting');
             submitBtn.disabled = true;
             if (editArea) {

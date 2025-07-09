@@ -910,7 +910,10 @@ body.theme-dark .lqd-titlebar-actions button:hover {
         // progressBar: true,
     };
 </script>
-<script src="//unpkg.com/alpinejs" defer></script>
+<!-- Alpine.js App Store Definitions -->
+<script src="{{ custom_theme_url('/assets/js/bootstrap.js') }}"></script>
+<script src="{{ custom_theme_url('/assets/js/app.js') }}"></script>
+<!-- Alpine.js -->
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <!--<script>-->
 <!--    $(document).ready(function () {-->

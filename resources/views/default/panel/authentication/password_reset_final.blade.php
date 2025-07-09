@@ -6,8 +6,6 @@
     <form
         class="flex flex-col gap-6"
         id="password_reset_form"
-        method="POST"
-        action="{{ route('password.reset.save') }}"
         novalidate="novalidate"
         onsubmit="return PasswordReset('{{ $user->password_reset_code }}');"
     >
@@ -36,6 +34,5 @@
         >
             {{ __('Reset Password') }}
         </x-button>
-        <!-- TODO Openai Demo -->
     </form>
 @endsection

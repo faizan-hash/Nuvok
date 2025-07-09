@@ -1,9 +1,20 @@
+// Global configurations
+let stream_type = document.querySelector('meta[name="stream_type"]')?.content || 'backend';
+
 const guest_id = document.getElementById( 'guest_id' ).value;
 const guest_event_id = document.getElementById( 'guest_event_id' ).value;
 const guest_look_id = document.getElementById( 'guest_look_id' ).value;
 const guest_product_id = document.getElementById( 'guest_product_id' ).value;
 let streamed_text = '';
 let streamed_message_id = 0;
+
+// Utility function to safely access Alpine store
+function safeAlpineStore(storeName, action, ...args) {
+	if (window.Alpine && Alpine.store && Alpine.store(storeName)) {
+		return Alpine.store(storeName)[action](...args);
+	}
+	return null;
+}
 
 function isHTML(string) {
 	return Array.from(new DOMParser().parseFromString(string, 'text/html').body.childNodes).some(({ nodeType }) => nodeType == 1);
@@ -24,7 +35,7 @@ const generate = async ( message_no, creativity, maximum_length, number_of_resul
 	const nIntervId = setInterval( function () {
 		if ( chunk.length == 0 && !streaming ) {
 			submitBtn.classList.remove( 'lqd-form-submitting' );
-			Alpine.store('appLoadingIndicator').hide();
+			safeAlpineStore('appLoadingIndicator', 'hide');
 			document.querySelector( '#workbook_regenerate' )?.classList?.remove( 'hidden' );
 			typingEl?.classList?.add( 'lqd-is-hidden' );
 			submitBtn.disabled = false;
@@ -206,7 +217,7 @@ const generate = async ( message_no, creativity, maximum_length, number_of_resul
 			}
 
 			submitBtn.classList.remove( 'lqd-form-submitting' );
-			Alpine.store('appLoadingIndicator').hide();
+			safeAlpineStore('appLoadingIndicator', 'hide');
 			document.querySelector( '#workbook_regenerate' )?.classList?.remove( 'hidden' );
 			submitBtn.disabled = false;
 			typingEl?.classList?.add( 'lqd-is-hidden' );
@@ -306,7 +317,7 @@ const tinymceOptions = {
 						toastr.warning('Please select text');
 						return;
 					}
-					Alpine.store('appLoadingIndicator').show();
+					safeAlpineStore('appLoadingIndicator', 'show');
 					let formData = new FormData();
 					formData.append( 'prompt', $( event.srcElement ).val() );
 					formData.append( 'content', editor.selection.getContent() );
@@ -318,10 +329,10 @@ const tinymceOptions = {
 						processData: false,
 						success: function ( data ) {
 							editor.selection.setContent( data.result );
-							Alpine.store('appLoadingIndicator').hide();
+							safeAlpineStore('appLoadingIndicator', 'hide');
 						},
 						error: function ( data ) {
-							Alpine.store('appLoadingIndicator').hide();
+							safeAlpineStore('appLoadingIndicator', 'hide');
 						}
 					} );
 				},
@@ -334,7 +345,7 @@ const tinymceOptions = {
 						toastr.warning('Please select text');
 						return;
 					}
-					Alpine.store('appLoadingIndicator').show();
+					safeAlpineStore('appLoadingIndicator', 'show');
 					let formData = new FormData();
 					formData.append( 'prompt', 'Rewrite below content professionally. Must detect the content language and ensure that the response is also in same content language.' );
 					formData.append( 'content', editor.selection.getContent() );
@@ -346,10 +357,10 @@ const tinymceOptions = {
 						processData: false,
 						success: function ( data ) {
 							editor.selection.setContent( data.result );
-							Alpine.store('appLoadingIndicator').hide();
+							safeAlpineStore('appLoadingIndicator', 'hide');
 						},
 						error: function ( data ) {
-							Alpine.store('appLoadingIndicator').hide();
+							safeAlpineStore('appLoadingIndicator', 'hide');
 						}
 					} );
 				}
@@ -362,7 +373,7 @@ const tinymceOptions = {
 						toastr.warning('Please select text');
 						return;
 					}
-					Alpine.store('appLoadingIndicator').show();
+					safeAlpineStore('appLoadingIndicator', 'show');
 					let formData = new FormData();
 					formData.append( 'prompt', 'Summarize below content professionally. Keep origin language.' );
 					formData.append( 'content', editor.selection.getContent() );
@@ -373,11 +384,11 @@ const tinymceOptions = {
 						contentType: false,
 						processData: false,
 						success: function ( data ) {
-							Alpine.store('appLoadingIndicator').hide();
+							safeAlpineStore('appLoadingIndicator', 'hide');
 							editor.selection.setContent( data.result );
 						},
 						error: function ( data ) {
-							Alpine.store('appLoadingIndicator').hide();
+							safeAlpineStore('appLoadingIndicator', 'hide');
 						}
 					} );
 				}
@@ -390,7 +401,7 @@ const tinymceOptions = {
 						toastr.warning('Please select text');
 						return;
 					}
-					Alpine.store('appLoadingIndicator').show();
+					safeAlpineStore('appLoadingIndicator', 'show');
 					let formData = new FormData();
 					formData.append( 'prompt', 'Make below content longer' );
 					formData.append( 'content', editor.selection.getContent() );
@@ -401,11 +412,11 @@ const tinymceOptions = {
 						contentType: false,
 						processData: false,
 						success: function ( data ) {
-							Alpine.store('appLoadingIndicator').hide();
+							safeAlpineStore('appLoadingIndicator', 'hide');
 							editor.selection.setContent( data.result );
 						},
 						error: function ( data ) {
-							Alpine.store('appLoadingIndicator').hide();
+							safeAlpineStore('appLoadingIndicator', 'hide');
 						}
 					} );
 				}
@@ -418,7 +429,7 @@ const tinymceOptions = {
 						toastr.warning('Please select text');
 						return;
 					}
-					Alpine.store('appLoadingIndicator').show();
+					safeAlpineStore('appLoadingIndicator', 'show');
 					let formData = new FormData();
 					formData.append( 'prompt', 'Make below content shorter' );
 					formData.append( 'content', editor.selection.getContent() );
@@ -429,11 +440,11 @@ const tinymceOptions = {
 						contentType: false,
 						processData: false,
 						success: function ( data ) {
-							Alpine.store('appLoadingIndicator').hide();
+							safeAlpineStore('appLoadingIndicator', 'hide');
 							editor.selection.setContent( data.result );
 						},
 						error: function ( data ) {
-							Alpine.store('appLoadingIndicator').hide();
+							safeAlpineStore('appLoadingIndicator', 'hide');
 						}
 					} );
 				}
@@ -446,7 +457,7 @@ const tinymceOptions = {
 						toastr.warning('Please select text');
 						return;
 					}
-					Alpine.store('appLoadingIndicator').show();
+					safeAlpineStore('appLoadingIndicator', 'show');
 					let formData = new FormData();
 					formData.append( 'prompt', 'Improve writing of  below content' );
 					formData.append( 'content', editor.selection.getContent() );
@@ -458,10 +469,10 @@ const tinymceOptions = {
 						processData: false,
 						success: function ( data ) {
 							editor.selection.setContent( data.result );
-							Alpine.store('appLoadingIndicator').hide();
+							safeAlpineStore('appLoadingIndicator', 'hide');
 						},
 						error: function ( data ) {
-							Alpine.store('appLoadingIndicator').hide();
+							safeAlpineStore('appLoadingIndicator', 'hide');
 						}
 					} );
 				}
@@ -521,7 +532,7 @@ const tinymceOptions = {
 									toastr.warning('Please select text');
 									return;
 								}
-								Alpine.store('appLoadingIndicator').show();
+								safeAlpineStore('appLoadingIndicator', 'show');
 								let formData = new FormData();
 								formData.append( 'prompt', 'Translate below content to ' + language.lang );
 								formData.append( 'content', editor.selection.getContent() );
@@ -534,10 +545,10 @@ const tinymceOptions = {
 									processData: false,
 									success: function ( data ) {
 										editor.selection.setContent( data.result );
-										Alpine.store('appLoadingIndicator').hide();
+										safeAlpineStore('appLoadingIndicator', 'hide');
 									},
 									error: function ( data ) {
-										Alpine.store('appLoadingIndicator').hide();
+										safeAlpineStore('appLoadingIndicator', 'hide');
 									}
 								} );
 							}
@@ -570,7 +581,7 @@ const tinymceOptions = {
 									toastr.warning('Please select text');
 									return;
 								}
-								Alpine.store('appLoadingIndicator').show();
+								safeAlpineStore('appLoadingIndicator', 'show');
 								let formData = new FormData();
 								formData.append( 'prompt', 'Change style of below content to ' + style + ' style.\n' );
 								formData.append( 'content', editor.selection.getContent() );
@@ -582,10 +593,10 @@ const tinymceOptions = {
 									processData: false,
 									success: function ( data ) {
 										editor.selection.setContent( data.result );
-										Alpine.store('appLoadingIndicator').hide();
+										safeAlpineStore('appLoadingIndicator', 'hide');
 									},
 									error: function ( data ) {
-										Alpine.store('appLoadingIndicator').hide();
+										safeAlpineStore('appLoadingIndicator', 'hide');
 									}
 								} );
 							}
@@ -628,7 +639,7 @@ const tinymceOptions = {
 									toastr.warning('Please select text');
 									return;
 								}
-								Alpine.store('appLoadingIndicator').show();
+								safeAlpineStore('appLoadingIndicator', 'show');
 								let formData = new FormData();
 								formData.append( 'prompt', 'Change tone of below content to ' + tone + ' tone.\n' );
 								formData.append( 'content', editor.selection.getContent() );
@@ -640,10 +651,10 @@ const tinymceOptions = {
 									processData: false,
 									success: function ( data ) {
 										editor.selection.setContent( data.result );
-										Alpine.store('appLoadingIndicator').hide();
+										safeAlpineStore('appLoadingIndicator', 'hide');
 									},
 									error: function ( data ) {
-										Alpine.store('appLoadingIndicator').hide();
+										safeAlpineStore('appLoadingIndicator', 'hide');
 									}
 								} );
 							}
@@ -661,7 +672,7 @@ const tinymceOptions = {
 						toastr.warning('Please select text');
 						return;
 					}
-					Alpine.store('appLoadingIndicator').show();
+					safeAlpineStore('appLoadingIndicator', 'show');
 					let formData = new FormData();
 					formData.append( 'prompt', 'Simplify below content' );
 					formData.append( 'content', editor.selection.getContent() );
@@ -673,10 +684,10 @@ const tinymceOptions = {
 						processData: false,
 						success: function ( data ) {
 							editor.selection.setContent( data.result );
-							Alpine.store('appLoadingIndicator').hide();
+							safeAlpineStore('appLoadingIndicator', 'hide');
 						},
 						error: function ( data ) {
-							Alpine.store('appLoadingIndicator').hide();
+							safeAlpineStore('appLoadingIndicator', 'hide');
 						}
 					} );
 				}
@@ -689,7 +700,7 @@ const tinymceOptions = {
 						toastr.warning('Please select text');
 						return;
 					}
-					Alpine.store('appLoadingIndicator').show();
+					safeAlpineStore('appLoadingIndicator', 'show');
 					let formData = new FormData();
 					formData.append( 'prompt', 'Fix grammatical mistakes in below content' );
 					formData.append( 'content', editor.selection.getContent() );
@@ -886,7 +897,7 @@ function editWorkbook( workbook_slug ) {
 
 	document.querySelector( '.workbook-form' )?.classList?.add('loading');
 	document.querySelector( '#workbook_button' ).disabled = true;
-	Alpine.store('appLoadingIndicator').show();
+	safeAlpineStore('appLoadingIndicator', 'show');
 	tinyMCE.get( 'workbook_text' ).save();
 	var formData = new FormData();
 	formData.append( 'workbook_slug', workbook_slug );
@@ -911,7 +922,7 @@ function editWorkbook( workbook_slug ) {
 		complete: function() {
 			document.querySelector( '.workbook-form' )?.classList?.remove('loading');
 			document.querySelector( '#workbook_button' ).disabled = false;
-			Alpine.store('appLoadingIndicator').hide();
+			safeAlpineStore('appLoadingIndicator', 'hide');
 		}
 	} );
 	return false;
@@ -919,7 +930,7 @@ function editWorkbook( workbook_slug ) {
 
 function endResponse(submitBtn, workbook_regenerate, typingEl) {
 	submitBtn.classList.remove( 'lqd-form-submitting' );
-	Alpine.store('appLoadingIndicator').hide();
+	safeAlpineStore('appLoadingIndicator', 'hide');
 	workbook_regenerate?.classList?.remove( 'hidden' );
 	typingEl?.classList?.add( 'lqd-is-hidden' );
 	submitBtn.disabled = false;

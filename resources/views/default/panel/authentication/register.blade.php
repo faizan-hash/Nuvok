@@ -122,9 +122,11 @@
             @endif
             <form
                 class="flex flex-col gap-6"
-                novalidate="novalidate"
-                onsubmit="return RegisterForm();"
+                method="post"
+                action="{{ route('register') }}"
+                id="registerForm"
             >
+                @csrf
 
                 <input
                     id="affiliate_code"
@@ -134,6 +136,7 @@
 
                 <x-forms.input
                     id="name_register"
+                    name="name"
                     placeholder="{{ __('Your Name') }}"
                     label="{{ __('Name') }}"
                     size="lg"
@@ -141,6 +144,7 @@
                 />
                 <x-forms.input
                     id="surname_register"
+                    name="surname"
                     placeholder="{{ __('Your Last Name') }}"
                     label="{{ __('Last Name') }}"
                     size="lg"
@@ -148,6 +152,7 @@
                 />
                 <x-forms.input
                     id="email_register"
+                    name="email"
                     type="email"
                     placeholder="{{ __('your@email.com') }}"
                     label="{{ __('Email Address') }}"
@@ -156,6 +161,7 @@
                 />
                 <x-forms.input
                     id="password_register"
+                    name="password"
                     type="password"
                     placeholder="{{ __('Your password') }}"
                     label="{{ __('Password') }}"
@@ -164,6 +170,7 @@
                 />
                 <x-forms.input
                     id="password_confirmation_register"
+                    name="password_confirmation"
                     type="password"
                     placeholder="{{ __('Password confirmation') }}"
                     label="{{ __('Confirm Your Password') }}"
@@ -224,4 +231,69 @@
 
 @push('script')
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('registerForm');
+    if (form) {
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const button = document.getElementById('RegisterFormButton');
+            button.disabled = true;
+            button.innerHTML = magicai_localize.please_wait;
+            Alpine.store('appLoadingIndicator').show();
+
+            try {
+                const formData = new FormData(form);
+                let recaptcha = document.getElementById('recaptcha').value;
+                
+                if (recaptcha == 1 && typeof grecaptcha !== 'undefined') {
+                    let recaptchaResponse = grecaptcha.getResponse();
+                    if (!recaptchaResponse) {
+                        toastr.error('Please complete the reCAPTCHA');
+                        button.disabled = false;
+                        button.innerHTML = '{{ __("Sign up") }}';
+                        Alpine.store('appLoadingIndicator').hide();
+                        return;
+                    }
+                    formData.append('g-recaptcha-response', recaptchaResponse);
+                }
+
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    if (result.errors) {
+                        Object.keys(result.errors).forEach(key => {
+                            toastr.error(result.errors[key][0]);
+                        });
+                    } else if (result.message) {
+                        toastr.error(result.message);
+                    }
+                    throw new Error('Registration failed');
+                }
+
+                if (result.redirect) {
+                    window.location.href = result.redirect;
+                } else {
+                    window.location.href = '{{ route("dashboard.index") }}';
+                }
+            } catch (error) {
+                console.error('Registration error:', error);
+            } finally {
+                button.disabled = false;
+                button.innerHTML = '{{ __("Sign up") }}';
+                Alpine.store('appLoadingIndicator').hide();
+            }
+        });
+    }
+});
+</script>
 @endpush

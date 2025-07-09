@@ -37,10 +37,10 @@ class MailController extends Controller
             ]);
             dispatch(new SendPasswordResetEmail($user));
 
-            return back()->with(['message' => __('Password reset mail sent succesfully'), 'type' => 'success']);
+            return response()->json(['message' => __('Password reset mail sent succesfully')], 200);
         }
 
-        return back()->with(['message' => __('Password reset mail sent succesfully'), 'type' => 'success']);
+        return response()->json(['message' => __('Password reset mail sent succesfully')], 200);
     }
 
     public function passwordResetCallback($password_reset_code)

@@ -7,7 +7,6 @@
         class="flex flex-col gap-6"
         id="password_reset_form"
         novalidate="novalidate"
-        onsubmit="return PasswordResetMailForm();"
     >
         <x-forms.input
             id="password_reset_email"
@@ -25,6 +24,5 @@
         >
             {{ __('Send Instructions') }}
         </x-button>
-        <!-- TODO Openai Demo -->
     </form>
 @endsection

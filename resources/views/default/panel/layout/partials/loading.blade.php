@@ -1,8 +1,8 @@
 <div
-    class="pointer-events-none invisible fixed left-0 right-0 top-[0.5px] z-[999] bg-background opacity-0 transition-opacity"
+    class="pointer-events-none fixed left-0 right-0 top-[0.5px] z-[999] bg-background transition-opacity"
     id="app-loading-indicator"
     x-data
-    :class="{ 'opacity-0': !$store.appLoadingIndicator.showing, 'invisible': !$store.appLoadingIndicator.showing }"
+    :class="{ 'opacity-100 visible': $store.appLoadingIndicator?.showing, 'opacity-0 invisible': !$store.appLoadingIndicator?.showing }"
 >
     <div class="lqd-progress relative h-[3px] w-full bg-foreground/10">
         <div

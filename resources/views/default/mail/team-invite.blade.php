@@ -377,8 +377,8 @@
                             $settings->site_name,
                             $settings->site_url,
                             $settings->site_url . '/forgot-password/retrieve/' . $user?->password_reset_code,
-                            $settings->site_url . '/register?aff=' . $user?->affiliate_code,
-                            $settings->site_url . '/register?aff=' . $user?->affiliate_code,
+                            route('register', ['aff' => $user?->affiliate_code]),
+                            route('register', ['aff' => $user?->affiliate_code]),
                             'Guest',
                             $settings->site_url.'/confirm/email/'.$user?->email_confirmation_code
                         ],

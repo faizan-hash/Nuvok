@@ -53,11 +53,29 @@ function liquidTinyMCEThemeHandlerInit( editor ) {
 	editor.on('init', function() {
 		liquidTinyMCEThemeHandler( editor );
 
-		Alpine.watch(
-			() => Alpine.store('darkMode').on,
-			() => {
-				liquidTinyMCEThemeHandler( editor );
-			}
-		);
+		// Wait for Alpine.js to be ready before setting up watch
+		if (window.Alpine && Alpine.store && Alpine.store('darkMode')) {
+			Alpine.watch(
+				() => Alpine.store('darkMode').on,
+				() => {
+					liquidTinyMCEThemeHandler( editor );
+				}
+			);
+		} else {
+			// Fallback: check for Alpine every 100ms until it's ready
+			const checkAlpine = setInterval(() => {
+				if (window.Alpine && Alpine.store && Alpine.store('darkMode')) {
+					clearInterval(checkAlpine);
+					Alpine.watch(
+						() => Alpine.store('darkMode').on,
+						() => {
+							liquidTinyMCEThemeHandler( editor );
+						}
+					);
+				}
+			}, 100);
+			// Stop checking after 5 seconds
+			setTimeout(() => clearInterval(checkAlpine), 5000);
+		}
 	});
 }

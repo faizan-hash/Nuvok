@@ -79,7 +79,6 @@ export default ({ mode }) => {
 		}
 	});
 };
-
 function detectServerConfig(domain) {
 	if (process.env.NODE_ENV === 'development') {
 		return {
@@ -115,3 +114,4 @@ function detectServerConfig(domain) {
 		},
 	};
 }
+

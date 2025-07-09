@@ -66,6 +66,9 @@
                     <x-tabler-mail class="size-4 size-5 absolute end-3 top-1/2 -translate-y-1/2" />
                 </x-slot:icon>
             </x-forms.input>
+            @error('email')
+                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+            @enderror
             @if ($app_is_demo)
                 <x-button onclick="return toastr.info('This feature is disabled in Demo version.')">
                     @lang('Invite Friends')

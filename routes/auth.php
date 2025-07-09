@@ -32,6 +32,7 @@ Route::group(['prefix' => LaravelLocalization::setLocale(), 'middleware' => ['lo
             ->name('password.reset');
         Route::post('password/reset', [MailController::class, 'passwordResetCallbackSave'])
             ->name('password.reset.save');
+        Route::post('forgot-password/save', [MailController::class, 'passwordResetCallbackSave']);
 
         // Social Login
         Route::get('/github/redirect', function () {

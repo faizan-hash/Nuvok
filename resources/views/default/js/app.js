@@ -1,4 +1,5 @@
 import './bootstrap';
+import './panel/common.js';
 import { Alpine, Livewire } from '~vendor/livewire/livewire/dist/livewire.esm';
 import ajax from '~nodeModules/@imacrayon/alpine-ajax';
 import sort from '~nodeModules/@alpinejs/sort';
@@ -217,8 +218,6 @@ document.addEventListener('alpine:init', () => {
 				tinymce?.activeEditor?.focus();
 			}
 		},
-
-
 		generatorStep: 0,
 		setGeneratorStep(step) {
 			if (step === this.generatorStep) return;
