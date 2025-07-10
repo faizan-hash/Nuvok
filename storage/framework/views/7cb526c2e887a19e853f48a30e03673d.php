@@ -11,6 +11,7 @@
     </script>
     <?php endif; ?>
     <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
+    <meta name="stream_type" content="<?php echo e($settings_two->openai_default_stream_server); ?>">
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
     <meta http-equiv="X-UA-Compatible" content="ie=edge"/>

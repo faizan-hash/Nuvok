@@ -114,11 +114,11 @@ class ClientController extends Controller
         // Check and consume client credit
         $user = auth()->user();
         if (!BusinessCreditService::hasCredits($user, 'clients')) {
-            return redirect()->back()->with(['type' => 'error', 'message' => 'You have no client credits left. Please upgrade your plan.']);
+            return redirect()->back()->with('error', 'You have no client credits left. Please upgrade your plan.');
         }
         
         if (!BusinessCreditService::consumeCredits($user, 'clients')) {
-            return redirect()->back()->with(['type' => 'error', 'message' => 'Failed to consume client credit. Please try again.']);
+            return redirect()->back()->with('error', 'Failed to consume client credit. Please try again.');
         }
 
         if ($request->hasFile('avatar')) {
@@ -161,7 +161,7 @@ class ClientController extends Controller
         
         
             return redirect()->route('dashboard.business.clients.index')
-                            ->with(['type' => 'success', 'message' => 'Client created successfully!']);
+                            ->with('success', 'Client created successfully!');
     }
     public function edit(BusinessClient $client)
     {
@@ -193,7 +193,7 @@ class ClientController extends Controller
         ]);
 
         return redirect()->route('dashboard.business.clients.index')
-                         ->with(['type' => 'success', 'message' => 'Client updated successfully!']);
+                         ->with('success', 'Client updated successfully!');
     }
 
     public function destroy(BusinessClient $client)

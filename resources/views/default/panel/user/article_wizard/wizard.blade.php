@@ -57,7 +57,6 @@
     <script src="{{ custom_theme_url('/assets/libs/apexcharts/dist/apexcharts.min.js') }}"></script>
     <script src="{{ custom_theme_url('/assets/libs/tinymce/tinymce.min.js') }}"></script>
     <script>
-        let stream_type = '{!! $settings_two->openai_default_stream_server !!}';
         const openai_model = '{{ $setting->openai_default_model }}';
         const guest_id = document.getElementById("guest_id")?.value;
         const guest_event_id = document.getElementById("guest_event_id")?.value;
@@ -66,14 +65,18 @@
     </script>
     <script src="{{ custom_theme_url('/assets/js/panel/article_wizard.js?v=' . time()) }}"></script>
     <script>
-        let selected_step = -1;
-        @if (isset($wizard))
-            CUR_STATE = {
-                ...@json($wizard)
-            };
-            selected_step = CUR_STATE.current_step;
-            image_storage = @json($settings_two->ai_image_storage);
-            updateData();
-        @endif
+        $(document).ready(function() {
+            let selected_step = -1;
+            @if (isset($wizard))
+                CUR_STATE = {
+                    ...@json($wizard)
+                };
+                selected_step = CUR_STATE.current_step;
+                image_storage = @json($settings_two->ai_image_storage);
+                if (typeof updateData === 'function') {
+                    updateData();
+                }
+            @endif
+        });
     </script>
 @endpush

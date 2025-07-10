@@ -5,7 +5,7 @@
             <x-section-header
                 mb="7"
                 width="w-3/5"
-                title="Smart Tools. Built by NuvokAI."
+                title="Smart Tools by NuvokAI."
                 subtitle="Everything you need to run your service business — quotes, invoices, content, and more — all powered by NuvokAI."
             >
                 <h6 class="mb-6 inline-block rounded-md bg-[#083D91] bg-opacity-15 px-3 py-1 text-[13px] font-medium text-[#083D91]">

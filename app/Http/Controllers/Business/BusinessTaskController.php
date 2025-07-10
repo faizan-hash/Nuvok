@@ -117,11 +117,11 @@ public function store(Request $request)
         // Check and consume task credit
         $user = auth()->user();
         if (!BusinessCreditService::hasCredits($user, 'tasks')) {
-            return redirect()->back()->with(['type' => 'error', 'message' => 'You have no task credits left. Please upgrade your plan.']);
+            return redirect()->back()->with('error', 'You have no task credits left. Please upgrade your plan.');
         }
         
         if (!BusinessCreditService::consumeCredits($user, 'tasks')) {
-            return redirect()->back()->with(['type' => 'error', 'message' => 'Failed to consume task credit. Please try again.']);
+            return redirect()->back()->with('error', 'Failed to consume task credit. Please try again.');
         }
 
         $task = BusinessTask::create($data);
@@ -165,14 +165,14 @@ public function store(Request $request)
             'description' => 'Created task: ' . $task->title,
         ]);
 
-        return redirect()->route('dashboard.business.task.index')->with(['type' => 'success', 'message' => 'Task created successfully.']);
+        return redirect()->route('dashboard.business.task.index')->with('success', 'Task created successfully.');
     } catch (\Exception $e) {
         Log::error('Task creation failed: ' . $e->getMessage(), [
             'user_id' => auth()->id(),
             'input_data' => $data,
         ]);
 
-        return back()->with(['type' => 'error', 'message' => 'Failed to create task. Please check logs.']);
+        return back()->with('error', 'Failed to create task. Please check logs.');
     }
 }
 

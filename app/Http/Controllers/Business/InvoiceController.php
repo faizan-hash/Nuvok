@@ -102,7 +102,7 @@ class InvoiceController extends Controller
             'tax_id.*' => 'exists:business_taxes,id',
             'status' => 'required|in:draft,sent,paid,cancelled',
             'description' => 'required|string',
-            'send_email_notification' => 'required|boolean',
+            'send_notification' => 'nullable|boolean',
             'items' => 'required|array|min:1',
             'items.*.item_name' => 'required|string|max:255',
             'items.*.quantity' => 'required|integer|min:1',
@@ -117,11 +117,11 @@ class InvoiceController extends Controller
         // Check and consume invoice credit
         $user = auth()->user();
         if (!BusinessCreditService::hasCredits($user, 'invoices')) {
-            return redirect()->back()->with(['type' => 'error', 'message' => 'You have no invoice credits left. Please upgrade your plan.']);
+            return redirect()->back()->with('error', 'You have no invoice credits left. Please upgrade your plan.');
         }
         
         if (!BusinessCreditService::consumeCredits($user, 'invoices')) {
-            return redirect()->back()->with(['type' => 'error', 'message' => 'Failed to consume invoice credit. Please try again.']);
+            return redirect()->back()->with('error', 'Failed to consume invoice credit. Please try again.');
         }
 
         $invoice = BusinessInvoice::create([
@@ -231,7 +231,7 @@ class InvoiceController extends Controller
 
         // Redirect to invoice index page after creation
         return redirect()->route('dashboard.business.invoices.index')
-            ->with(['type' => 'success', 'message' => 'Invoice created successfully and payment link generated!']);
+            ->with('success', 'Invoice created successfully and payment link generated!');
     }
 
     public function edit(BusinessInvoice $invoice)

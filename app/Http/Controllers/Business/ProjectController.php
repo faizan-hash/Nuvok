@@ -76,11 +76,11 @@ class ProjectController extends Controller
         // Check and consume project credit
         $user = auth()->user();
         if (!BusinessCreditService::hasCredits($user, 'projects')) {
-            return redirect()->back()->with(['type' => 'error', 'message' => 'You have no project credits left. Please upgrade your plan.']);
+            return redirect()->back()->with('error', 'You have no project credits left. Please upgrade your plan.');
         }
         
         if (!BusinessCreditService::consumeCredits($user, 'projects')) {
-            return redirect()->back()->with(['type' => 'error', 'message' => 'Failed to consume project credit. Please try again.']);
+            return redirect()->back()->with('error', 'Failed to consume project credit. Please try again.');
         }
 
         // Create project without user_id
@@ -101,7 +101,7 @@ class ProjectController extends Controller
         ]);
     
         return redirect()->route('dashboard.business.projects.index')
-               ->with(['type' => 'success', 'message' => 'Project created successfully']);
+               ->with('success', 'Project created successfully');
     }
     public function update(Request $request, BusinessProject $project)
     {
@@ -131,7 +131,7 @@ class ProjectController extends Controller
     ]);
     
         return redirect()->route('dashboard.business.projects.index')
-               ->with(['type' => 'success', 'message' => 'Project updated successfully']);
+               ->with('success', 'Project updated successfully');
     }
     public function destroy(BusinessProject $project)
     {
@@ -147,7 +147,7 @@ class ProjectController extends Controller
         ]);
         
         $project->delete();
-        return redirect()->route('dashboard.business.projects.index')->with(['type' => 'success', 'message' => 'Project deleted successfully']);
+        return redirect()->route('dashboard.business.projects.index')->with('success', 'Project deleted successfully');
     }
     public function bulkdelete(Request $request)
     {

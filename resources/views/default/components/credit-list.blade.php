@@ -154,8 +154,11 @@
                         size="{{ $legendSize }}"
                         label="{{ __($labelWords) }}"
                     >
-                        <span class="ms-auto font-medium">
+                        <span class="ms-auto font-medium group relative">
                             @formatNumberShort($wordEntities->checkIfThereUnlimited() ? __('Unlimited') : $wordEntities->totalCredits())
+                            <span class="pointer-events-none invisible absolute bottom-full left-1/2 mb-1 -translate-x-1/2 translate-y-1 scale-90 rounded-md bg-heading-foreground/10 px-2 py-1 font-medium leading-none text-heading-foreground opacity-0 blur-md backdrop-blur-lg transition-all group-hover:visible group-hover:translate-y-0 group-hover:scale-100 group-hover:opacity-100 group-hover:blur-0 whitespace-normal break-words max-w-xs">
+                                100K tokens = approx. 15K AI words or 30 images or 50 quotes
+                            </span>
                         </span>
                         @if (!$wordEntities->checkIfThereUnlimited())
                             <span
@@ -174,8 +177,11 @@
                     size="{{ $legendSize }}"
                     label="{{ __($labelImages) }}"
                 >
-                    <span class="ms-auto font-medium">
+                    <span class="ms-auto font-medium group relative">
                         @formatNumberShort($imageEntities->checkIfThereUnlimited() ? __('Unlimited') : $imageEntities->totalCredits())
+                        <span class="pointer-events-none invisible absolute bottom-full left-1/2 mb-1 -translate-x-1/2 translate-y-1 scale-90 rounded-md bg-heading-foreground/10 px-2 py-1 font-medium leading-none text-heading-foreground opacity-0 blur-md backdrop-blur-lg transition-all group-hover:visible group-hover:translate-y-0 group-hover:scale-100 group-hover:opacity-100 group-hover:blur-0 whitespace-normal break-words max-w-xs">
+                            100K tokens = approx. 15K AI words or 30 images or 50 quotes
+                        </span>
                     </span>
                     @if (!$imageEntities->checkIfThereUnlimited())
                         <span

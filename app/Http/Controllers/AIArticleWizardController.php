@@ -338,6 +338,13 @@ class AIArticleWizardController extends Controller
 
         try {
             $wizard = ArticleWizard::find($request->id);
+
+            if (!$wizard) {
+                return response()->json([
+                    'message' => 'Article wizard not found.',
+                ], 404);
+            }
+
             $size = $request->size;
             $prompt = $request->prompt;
             if (empty($prompt)) {
@@ -352,7 +359,7 @@ class AIArticleWizardController extends Controller
         } catch (ClientException|Exception|GuzzleException $e) {
             $engine = $defaultEngine === 'sd' ? EngineEnum::STABLE_DIFFUSION->slug() : $defaultEngine;
 
-            if (! ($e instanceof Exception) && $e?->getResponse()?->getStatusCode() === 401) {
+            if (!($e instanceof Exception) && $e?->getResponse()?->getStatusCode() === 401) {
                 // Unauthorized error
                 if (Auth::user()?->isAdmin()) {
                     return response()->json([
@@ -361,12 +368,12 @@ class AIArticleWizardController extends Controller
                 }
 
                 return response()->json([
-                    'message' => __('It seems that :label API not set yet or is missing or invalid. Please submit a ticket to support.', ['label' =>  EngineEnum::fromSlug($engine)->label()]),
+                    'message' => __('It seems that :label API not set yet or is missing or invalid. Please submit a ticket to support.', ['label' => EngineEnum::fromSlug($engine)->label()]),
                 ], 401);
             }
 
             return response()->json([
-                'message' => $e->getMessage() . "Model: $defaultModel->value",
+                'message' => $e->getMessage() . " Model: $defaultModel->value",
             ], 500);
         }
     }
@@ -392,7 +399,12 @@ class AIArticleWizardController extends Controller
      */
     private function checkBalanceForImages(EntityEnum $defaultModel, int $count): void
     {
-        Entity::driver($defaultModel)->inputImageCount($count)->calculateCredit()->redirectIfNoCreditBalance();
+        try {
+            Entity::driver($defaultModel)->inputImageCount($count)->calculateCredit()->redirectIfNoCreditBalance();
+        } catch (\Exception $e) {
+            // Re-throw with a more user-friendly message for AJAX requests
+            throw new \Exception('Insufficient credits for image generation. Please upgrade your plan or purchase more credits.');
+        }
     }
 
     /**

@@ -13,7 +13,24 @@
     <a
         class="block w-full rounded-lg bg-black bg-opacity-[0.03] p-3 font-medium text-heading-foreground transition-colors hover:bg-black hover:text-white"
         href="{{ route('register', ['plan' => $plan->id]) }}"
-    >{{ __('Select').'  '.__($plan->name) }}</a>
+    >
+        @switch($plan->name)
+            @case('Starter')
+                Start Solo for $39/mo
+                @break
+            @case('Pro')
+                Grow Your Team – $79/mo
+                @break
+            @case('Premium')
+                Scale Fast – $149/mo
+                @break
+            @case('Enterprise')
+                Let’s Build Your AI Stack
+                @break
+            @default
+                {{ __('Select').'  '.__($plan->name) }}
+        @endswitch
+    </a>
 
     <x-plan-details-card
         :plan="$plan"

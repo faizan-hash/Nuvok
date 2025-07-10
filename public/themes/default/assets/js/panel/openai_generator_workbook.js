@@ -1,5 +1,7 @@
 // Global configurations
-let stream_type = document.querySelector('meta[name="stream_type"]')?.content || 'backend';
+if (typeof window.stream_type === 'undefined') {
+    window.stream_type = document.querySelector('meta[name="stream_type"]')?.content || 'backend';
+}
 
 const guest_id = document.getElementById( 'guest_id' ).value;
 const guest_event_id = document.getElementById( 'guest_event_id' ).value;
@@ -20,212 +22,213 @@ function isHTML(string) {
 	return Array.from(new DOMParser().parseFromString(string, 'text/html').body.childNodes).some(({ nodeType }) => nodeType == 1);
 }
 
-const generate = async ( message_no, creativity, maximum_length, number_of_results, prompt, openai_id, open_router_model) => {
-	'use strict';
-	const submitBtn = document.getElementById( 'openai_generator_button' );
-	const typingEl = document.querySelector( '.tox-edit-area > .lqd-typing' );
-	const markdownRenderer = window.markdownit();
+if (typeof window.generate === 'undefined') {
+    window.generate = async (message_no, creativity, maximum_length, number_of_results, prompt, openai_id, open_router_model) => {
+        'use strict';
+        const submitBtn = document.getElementById( 'openai_generator_button' );
+        const typingEl = document.querySelector( '.tox-edit-area > .lqd-typing' );
+        const markdownRenderer = window.markdownit();
 
-	const chunk = [];
-	let streaming = true;
-	let result = '';
-	let formattedText = null;
-	let textIsFormatted = false;
+        const chunk = [];
+        let streaming = true;
+        let result = '';
+        let formattedText = null;
+        let textIsFormatted = false;
 
-	const nIntervId = setInterval( function () {
-		if ( chunk.length == 0 && !streaming ) {
-			submitBtn.classList.remove( 'lqd-form-submitting' );
-			safeAlpineStore('appLoadingIndicator', 'hide');
-			document.querySelector( '#workbook_regenerate' )?.classList?.remove( 'hidden' );
-			typingEl?.classList?.add( 'lqd-is-hidden' );
-			submitBtn.disabled = false;
-			if (stream_type != 'backend'){
-				saveResponse( prompt, result, message_no );
-			}
+        const nIntervId = setInterval( function () {
+            if ( chunk.length == 0 && !streaming ) {
+                submitBtn.classList.remove( 'lqd-form-submitting' );
+                safeAlpineStore('appLoadingIndicator', 'hide');
+                document.querySelector( '#workbook_regenerate' )?.classList?.remove( 'hidden' );
+                typingEl?.classList?.add( 'lqd-is-hidden' );
+                submitBtn.disabled = false;
+                if (stream_type != 'backend'){
+                    saveResponse( prompt, result, message_no );
+                }
 
-			const finalResult = result?.replace(/<div>|<\/div>/g, '')?.replace(/<br>|<br\/>/g, '\n');
+                const finalResult = result?.replace(/<div>|<\/div>/g, '')?.replace(/<br>|<br\/>/g, '\n');
 
-			// at the end format the content from markdown to html
-			if ( !isHTML(finalResult) && !textIsFormatted && finalResult ) {
-				formattedText = markdownRenderer.render(markdownRenderer.utils.unescapeAll(finalResult));
-				textIsFormatted = true;
-			}
+                // at the end format the content from markdown to html
+                if ( !isHTML(finalResult) && !textIsFormatted && finalResult ) {
+                    formattedText = markdownRenderer.render(markdownRenderer.utils.unescapeAll(finalResult));
+                    textIsFormatted = true;
+                }
 
-			tinyMCE.activeEditor.setContent( formattedText || finalResult );
+                tinyMCE.activeEditor.setContent( formattedText || finalResult );
 
-			// moving the cursor to the end
-			tinymce.activeEditor.selection.select(tinyMCE.activeEditor.getBody(), true);
-			tinymce.activeEditor.selection.collapse(false);
-			tinymce.activeEditor.focus();
-			tinymce.activeEditor.insertContent('<p></p>');
+                // moving the cursor to the end
+                tinymce.activeEditor.selection.select(tinyMCE.activeEditor.getBody(), true);
+                tinymce.activeEditor.selection.collapse(false);
+                tinymce.activeEditor.focus();
+                tinymce.activeEditor.insertContent('<p></p>');
 
-			clearInterval( nIntervId );
-		}
+                clearInterval( nIntervId );
+            }
 
-		const text = chunk.shift();
+            const text = chunk.shift();
 
-		if ( text ) {
-			streamed_text = streamed_text + text;
-			result += text;
-			tinyMCE.activeEditor.setContent( result, { format: 'raw' } );
-			typingEl?.classList?.add( 'lqd-is-hidden' );
-		}
-	}, 20 );
-	if (stream_type == 'backend') {
-		var signal = new AbortController().signal;
-		var formData = new FormData();
+            if ( text ) {
+                streamed_text = streamed_text + text;
+                result += text;
+                tinyMCE.activeEditor.setContent( result, { format: 'raw' } );
+                typingEl?.classList?.add( 'lqd-is-hidden' );
+            }
+        }, 20 );
+        if (stream_type == 'backend') {
+            var signal = new AbortController().signal;
+            var formData = new FormData();
 
-		if (document.getElementById('chatbot_front_model')) {
-			let chatbot_front_model = document.getElementById('chatbot_front_model').value;
-			formData.append('chatbot_front_model', chatbot_front_model);
-		}
+            if (document.getElementById('chatbot_front_model')) {
+                let chatbot_front_model = document.getElementById('chatbot_front_model').value;
+                formData.append('chatbot_front_model', chatbot_front_model);
+            }
 
-		formData.append('template_type', 'writer');
-		formData.append('message_id', message_no);
-		formData.append('prompt', prompt);
-		formData.append('creativity', creativity);
-		formData.append('maximum_length', maximum_length);
-		formData.append('number_of_results', number_of_results);
-		formData.append('openai_id', openai_id);
-		formData.append('open_router_model', open_router_model);
-		var receivedMessageId = false;
-		fetchEventSource('/dashboard/user/generator/generate-stream', {
-			method: 'POST',
-			headers: {
-				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-			},
-			body: formData,
-			signal: signal,
-			onmessage: e => {
-				if (!receivedMessageId) {
-					var eventData = e.event.split('\n').reduce((acc, line) => {
-						if (line.startsWith('message')) {
-							acc.type = 'message';
-							acc.data = e.data;
-						}
-						return acc;
-					}, {});
-					if (eventData.type === 'message') {
-						var message_id = eventData.data;
-						streamed_message_id = message_id;
-						receivedMessageId = true;
-					}
-				} else {
-					if (e.data === '[DONE]') {
-						streaming = false;
-					}
-					let txt = e.data;
-					if (txt !== undefined && e.data != '[DONE]') {
-						chunk.push(txt);
-					}
-				}
-			},
-			onclose: () => {
-				streamed_message_id = 0;
-				streamed_text = '';
-			},
-			onerror: err => {
-				throw err; // stop retrying
-			}
-		});
-	} else {
-		const prompt1= atob(guest_event_id);
-		const prompt2= atob(guest_look_id);
-		const prompt3= atob(guest_product_id);
+            formData.append('template_type', 'writer');
+            formData.append('message_id', message_no);
+            formData.append('prompt', prompt);
+            formData.append('creativity', creativity);
+            formData.append('maximum_length', maximum_length);
+            formData.append('number_of_results', number_of_results);
+            formData.append('openai_id', openai_id);
+            formData.append('open_router_model', open_router_model);
+            var receivedMessageId = false;
+            fetchEventSource('/dashboard/user/generator/generate-stream', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                body: formData,
+                signal: signal,
+                onmessage: e => {
+                    if (!receivedMessageId) {
+                        var eventData = e.event.split('\n').reduce((acc, line) => {
+                            if (line.startsWith('message')) {
+                                acc.type = 'message';
+                                acc.data = e.data;
+                            }
+                            return acc;
+                        }, {});
+                        if (eventData.type === 'message') {
+                            var message_id = eventData.data;
+                            streamed_message_id = message_id;
+                            receivedMessageId = true;
+                        }
+                    } else {
+                        if (e.data === '[DONE]') {
+                            streaming = false;
+                        }
+                        let txt = e.data;
+                        if (txt !== undefined && e.data != '[DONE]') {
+                            chunk.push(txt);
+                        }
+                    }
+                },
+                onclose: () => {
+                    streamed_message_id = 0;
+                    streamed_text = '';
+                },
+                onerror: err => {
+                    throw err; // stop retrying
+                }
+            });
+        } else {
+            const prompt1= atob(guest_event_id);
+            const prompt2= atob(guest_look_id);
+            const prompt3= atob(guest_product_id);
 
-		const bearer = prompt1+prompt2+prompt3;
+            const bearer = prompt1+prompt2+prompt3;
 
-		let guest_id2 = atob(guest_id);
+            let guest_id2 = atob(guest_id);
 
-		const messages = [];
-		messages.push({
-			role: 'system',
-			content: 'You are a helpful assistant.'
-		});
-		messages.push({
-			role: 'user',
-			content: prompt
-		});
+            const messages = [];
+            messages.push({
+                role: 'system',
+                content: 'You are a helpful assistant.'
+            });
+            messages.push({
+                role: 'user',
+                content: prompt
+            });
 
-		try {
+            try {
 
-			const response = await fetch(guest_id2, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-					Authorization: `Bearer ${bearer}`,
-				},
-				body: JSON.stringify({
-					model: openai_model,
-					messages: messages,
-					stream: true, // For streaming responses
-				}),
-			});
+                const response = await fetch(guest_id2, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${bearer}`,
+                    },
+                    body: JSON.stringify({
+                        model: openai_model,
+                        messages: messages,
+                        stream: true, // For streaming responses
+                    }),
+                });
 
-			if (response.status != 200) {
-				throw response;
-			}
-			// Read the response as a stream of data
-			const reader = response.body.getReader();
-			const decoder = new TextDecoder('utf-8');
-			let result = '';
+                if (response.status != 200) {
+                    throw response;
+                }
+                // Read the response as a stream of data
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder('utf-8');
+                let result = '';
 
-			while (true) {
-				// if (window.console || window.console.firebug) {
-				// 	console.clear();
-				// }
-				const { done, value } = await reader.read();
-				if (done) {
-					streaming = false;
-					break;
-				}
-				// Massage and parse the chunk of data
-				const chunk1 = decoder.decode(value);
+                while (true) {
+                    // if (window.console || window.console.firebug) {
+                    // 	console.clear();
+                    // }
+                    const { done, value } = await reader.read();
+                    if (done) {
+                        streaming = false;
+                        break;
+                    }
+                    // Massage and parse the chunk of data
+                    const chunk1 = decoder.decode(value);
 
-				const lines = chunk1.split('\n');
+                    const lines = chunk1.split('\n');
 
-				const parsedLines = lines
-					.map(line => line.replace(/^data: /, '').trim()) // Remove the "data: " prefix
-					.filter(line => line !== '' && line !== '[DONE]') // Remove empty lines and "[DONE]"
-					.map(line => {
-						try {
-							return JSON.parse(line);
-						} catch (ex) {
-							console.log(line);
-						}
-						return null;
-					}); // Parse the JSON string
+                    const parsedLines = lines
+                        .map(line => line.replace(/^data: /, '').trim()) // Remove the "data: " prefix
+                        .filter(line => line !== '' && line !== '[DONE]') // Remove empty lines and "[DONE]"
+                        .map(line => {
+                            try {
+                                return JSON.parse(line);
+                            } catch (ex) {
+                                console.log(line);
+                            }
+                            return null;
+                        }); // Parse the JSON string
 
-				for (const parsedLine of parsedLines) {
-					if (!parsedLine) continue;
-					const { choices } = parsedLine;
-					const { delta } = choices[0];
-					const { content } = delta;
+                    for (const parsedLine of parsedLines) {
+                        if (!parsedLine) continue;
+                        const { choices } = parsedLine;
+                        const { delta } = choices[0];
+                        const { content } = delta;
 
-					if (content) {
-						chunk.push( content.replace( /(?:\r\n|\r|\n)/g, ' <br> ' ) );
-					}
-				}
-			}
-		} catch (error) {
-			switch (error.status) {
-				case 429:
-					toastr.error(magicai_localize?.api_connection_error || 'Api Connection Error. You hit the rate limites of openai requests. Please check your Openai API Key');
-					break;
-				default:
-					toastr.error(magicai_localize?.api_connection_error_admin || 'Api Connection Error. Please contact system administrator via Support Ticket. Error is: API Connection failed due to API keys');
-			}
+                        if (content) {
+                            chunk.push( content.replace( /(?:\r\n|\r|\n)/g, ' <br> ' ) );
+                        }
+                    }
+                }
+            } catch (error) {
+                switch (error.status) {
+                    case 429:
+                        toastr.error(magicai_localize?.api_connection_error || 'Api Connection Error. You hit the rate limites of openai requests. Please check your Openai API Key');
+                        break;
+                    default:
+                        toastr.error(magicai_localize?.api_connection_error_admin || 'Api Connection Error. Please contact system administrator via Support Ticket. Error is: API Connection failed due to API keys');
+                }
 
-			submitBtn.classList.remove( 'lqd-form-submitting' );
-			safeAlpineStore('appLoadingIndicator', 'hide');
-			document.querySelector( '#workbook_regenerate' )?.classList?.remove( 'hidden' );
-			submitBtn.disabled = false;
-			typingEl?.classList?.add( 'lqd-is-hidden' );
-			streaming = false;
-		}
-	}
-};
-
+                submitBtn.classList.remove( 'lqd-form-submitting' );
+                safeAlpineStore('appLoadingIndicator', 'hide');
+                document.querySelector( '#workbook_regenerate' )?.classList?.remove( 'hidden' );
+                submitBtn.disabled = false;
+                typingEl?.classList?.add( 'lqd-is-hidden' );
+                streaming = false;
+            }
+        }
+    };
+}
 
 
 function calculateWords( sentence ) {
@@ -264,6 +267,7 @@ function saveResponse( input, response, message_no, title = null, resave = false
 }
 
 const tinymceOptions = {
+	license_key: 'gpl',
 	selector: '.tinymce',
 	height: 543,
 	menubar: false,
@@ -928,10 +932,12 @@ function editWorkbook( workbook_slug ) {
 	return false;
 }
 
-function endResponse(submitBtn, workbook_regenerate, typingEl) {
-	submitBtn.classList.remove( 'lqd-form-submitting' );
-	safeAlpineStore('appLoadingIndicator', 'hide');
-	workbook_regenerate?.classList?.remove( 'hidden' );
-	typingEl?.classList?.add( 'lqd-is-hidden' );
-	submitBtn.disabled = false;
+if (typeof window.endResponse === 'undefined') {
+    window.endResponse = function(submitBtn, workbook_regenerate, typingEl) {
+        if (submitBtn) submitBtn.classList.remove('lqd-form-submitting');
+        if (window.Alpine && Alpine.store) Alpine.store('appLoadingIndicator').hide();
+        if (workbook_regenerate) workbook_regenerate.classList.remove('hidden');
+        if (typingEl) typingEl.classList.add('lqd-is-hidden');
+        if (submitBtn) submitBtn.disabled = false;
+    };
 }

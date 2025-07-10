@@ -122,7 +122,7 @@
                 <a style="color: white;"
                     class="transition-opacity hover:opacity-100"
                     href="#features"
-                >Discover NuvokAI</a>
+                >Explore Features</a>
             </div>
         </div>
     </div>

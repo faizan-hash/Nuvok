@@ -5,7 +5,7 @@
         <div class="rounded-[50px] border p-10 max-sm:px-5">
             <?php if (isset($component)) { $__componentOriginal044312fc7e45484e118b3e1951e4e85f = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal044312fc7e45484e118b3e1951e4e85f = $attributes; } ?>
-<?php $component = App\View\Components\SectionHeader::resolve(['mb' => '7','width' => 'w-3/5','title' => 'Smart Tools. Built by NuvokAI.','subtitle' => 'Everything you need to run your service business — quotes, invoices, content, and more — all powered by NuvokAI.'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = App\View\Components\SectionHeader::resolve(['mb' => '7','width' => 'w-3/5','title' => 'Smart Tools by NuvokAI.','subtitle' => 'Everything you need to run your service business — quotes, invoices, content, and more — all powered by NuvokAI.'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('section-header'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>

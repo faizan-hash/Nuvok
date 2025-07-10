@@ -951,15 +951,13 @@ body.theme-dark .lqd-titlebar-actions button:hover {
 <!--    });-->
 <!--</script>-->
 
-<?php if(session('message') || session('success') || session('error')): ?>
+<?php if(session('success') || session('error')): ?>
 <div id="tailwind-alerts" class="fixed top-4 right-2 z-50 w-1/3 space-y-2"></div>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        <?php if(session('message') && session('type')): ?>
-            showAlert('<?php echo e(session("type")); ?>', '<?php echo e(session("message")); ?>');
-        <?php elseif(session('success')): ?>
+        <?php if(session('success') && !session('message')): ?>
             showAlert('success', '<?php echo e(session("success")); ?>');
-        <?php elseif(session('error')): ?>
+        <?php elseif(session('error') && !session('message')): ?>
             showAlert('error', '<?php echo e(session("error")); ?>');
         <?php endif; ?>
     });

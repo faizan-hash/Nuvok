@@ -319,9 +319,10 @@ body.theme-dark .add-item-btn:hover {
 
             {{-- Email and Notification Checkbox --}}
             <div class="flex items-center mt-4">
-                <input id="send_notification" name="send_notification" type="checkbox" 
+                <input type="hidden" name="send_notification" value="0">
+                <input id="send_notification" name="send_notification" type="checkbox" value="1"
                        class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-                       {{ old('send_notification') ? 'checked' : '' }}>
+                       {{ old('send_notification', isset($invoice) ? $invoice->send_email_notification : false) ? 'checked' : '' }}>
                 <label for="send_notification" class="ml-2 block text-sm text-gray-700">
                     Send email and notification to client
                 </label>

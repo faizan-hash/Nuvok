@@ -136,7 +136,7 @@
         /* Plan Badge */
         .plan-badge {
             position: absolute;
-            top: 0px;
+            top: 5px;
             left: 50%;
             transform: translateX(-50%);
             background: linear-gradient(45deg, #6EE7B7, #B06F49);
@@ -152,7 +152,7 @@
             font-size: 20px;
             font-weight: 600;
             color: #1C2A39;
-            margin: 12px 0 0 0;
+            margin: 34px 0 0 0;
             text-align: center;
         }
         .pricing-card .price {
@@ -182,16 +182,41 @@
             padding: 12px;
             margin: 16px 0;
             text-align: center;
+            position: relative;
         }
         .tokens-info .tokens-amount {
             font-size: 18px;
             font-weight: 600;
             color: #1C2A39;
+            cursor: pointer;
         }
         .tokens-info .tokens-label {
             font-size: 12px;
             color: #1C2A39;
             margin-top: 4px;
+        }
+        .tokens-info .tokens-tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(10px);
+            background-color: rgba(28, 42, 57, 0.9);
+            color: #F9FAFB;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            white-space: normal;
+            word-wrap: break-word;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 10;
+            max-width: 320px;
+        }
+        .tokens-info:hover .tokens-tooltip {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(70%);
         }
 
         .pricing-card ul {
@@ -274,6 +299,12 @@
         .compare-features button:hover {
             background-color: #B06F49;
         }
+        .compare-features-text {
+            font-size: 14px;
+            color: #1C2A39;
+            opacity: 0.7;
+            margin-top: 8px;
+        }
 
         /* Swiper Navigation */
         .swiper-button-next,
@@ -342,7 +373,7 @@
             padding: 20px;
             border-radius: 12px;
             width: 90%;
-            max-width: 800px;
+            max-width: 900px;
             max-height: 80vh;
             overflow-y: auto;
         }
@@ -356,21 +387,66 @@
         .close:hover {
             color: #B06F49;
         }
+        .modal-description {
+            margin-top: 8px;
+            margin-bottom: 20px;
+            color: #1C2A39;
+            opacity: 0.8;
+            font-size: 16px;
+        }
+        .modal-note {
+            font-size: 14px;
+            color: #B06F49;
+            margin-bottom: 15px;
+        }
         .comparison-table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
+            font-size: 13px;
+        }
+        .overflow-x-auto {
+            overflow-x: initial;
+            max-width: 100%;
+            -webkit-overflow-scrolling: auto;
         }
         .comparison-table th,
         .comparison-table td {
-            padding: 12px;
+            padding: 12px 15px;
             text-align: left;
-            border-bottom: 1px solid #1C2A39;
+            border-bottom: 1px solid rgba(28, 42, 57, 0.1);
+            white-space: normal;
         }
         .comparison-table th {
             background-color: #6EE7B7;
             color: #1C2A39;
             font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+        .comparison-table th:first-child {
+            width: 25%;
+        }
+        .comparison-table tr:hover {
+            background-color: rgba(110, 231, 183, 0.05);
+        }
+        .comparison-table .category-header {
+            background-color: rgba(28, 42, 57, 0.05);
+            font-weight: 600;
+        }
+        .comparison-table .check-icon {
+            color: #6EE7B7;
+            font-size: 18px;
+        }
+        .comparison-table .dash-icon {
+            color: #B06F49;
+        }
+        .comparison-table .highlight {
+            font-weight: 600;
+            color: #B06F49;
         }
 
         /* Tooltip Styles */
@@ -440,6 +516,13 @@
             .comparison-table {
                 font-size: 12px;
             }
+            .comparison-table th,
+            .comparison-table td {
+                padding: 8px 4px;
+            }
+            .modal-description {
+                font-size: 14px;
+            }
         }
     </style>
 </head>
@@ -477,15 +560,16 @@
                                                 <div class="tokens-info">
                                                     <div class="tokens-amount">25K AI Tokens</div>
                                                     <div class="tokens-label">Basic AI usage included</div>
+                                                    <div class="tokens-tooltip">100K tokens = approx. 15K AI words or 30 images or 50 quotes</div>
                                                 </div>
                                             </div>
 
                                             <ul>
-                                                <li><span class="check">✔</span> GPT-3.5 Access</li>
-                                                <li><span class="check">✔</span> 1 User / 1 Project</li>
-                                                <li><span class="check">✔</span> Basic Quote Generator</li>
-                                                <li><span class="check">✔</span> Email Support</li>
-                                                <li><span class="check">✔</span> 14-Day Trial</li>
+                                                <li>👉 GPT-3.5 Access</li>
+                                                <li>👉 1 User / 1 Project</li>
+                                                <li>👉 Basic Quote Generator</li>
+                                                <li>👉 Email Support</li>
+                                                <li>👉 14-Day Trial</li>
                                             </ul>
                                             
                                             <button>Start Free Trial</button>
@@ -503,21 +587,23 @@
                                             <div class="plan-badge">💡 Best for New Solo Operators</div>
                                             <h3>Starter</h3>
                                             <p class="price" id="starter-price-mobile">$39<span>/month</span></p>
+                                            <p class="text-xs text-gray-500 mt-2 text-center">Billed monthly – cancel anytime</p>
                                             
                                             <div class="tooltip-container" data-tooltip="100K tokens = approx. 15K AI words or 30 images or 50 quotes.">
                                                 <div class="tokens-info">
                                                     <div class="tokens-amount">100K AI Tokens</div>
                                                     <div class="tokens-label">~200 quotes or estimates</div>
+                                                    <div class="tokens-tooltip">100K tokens = approx. 15K AI words or 30 images or 50 quotes</div>
                                                 </div>
                                             </div>
                                             <p class="text-xs text-gray-500 mt-2 text-center">Overage: $0.015 / 1K tokens</p>
 
                                             <ul>
-                                                <li><span class="check">✔</span> GPT-3.5 + Basic Tools</li>
-                                                <li><span class="check">✔</span> 1 User / 2 Projects</li>
-                                                <li><span class="check">✔</span> CRM: Lite (50 contacts)</li>
-                                                <li><span class="check">✔</span> Basic Invoicing</li>
-                                                <li><span class="check">✔</span> Priority Support</li>
+                                                <li>👉 GPT-3.5 + Basic Tools</li>
+                                                <li>👉 1 User / 2 Projects</li>
+                                                <li>👉 CRM: Lite (50 contacts)</li>
+                                                <li>👉 Basic Invoicing</li>
+                                                <li>👉 Priority Support</li>
                                             </ul>
                                             
                                             <button>Start Solo for $39/mo</button>
@@ -535,21 +621,23 @@
                                             <div class="plan-badge">🔧 Popular with Growing Service Businesses</div>
                                             <h3>Pro</h3>
                                             <p class="price" id="pro-price-mobile">$79<span>/month</span></p>
+                                            <p class="text-xs text-gray-500 mt-2 text-center">Billed monthly – cancel anytime</p>
                                             
                                             <div class="tooltip-container" data-tooltip="500K tokens = approx. 75K AI words or 150 images or 250 quotes.">
                                                 <div class="tokens-info">
                                                     <div class="tokens-amount">500K AI Tokens</div>
                                                     <div class="tokens-label">~1,000 quotes + AI features</div>
+                                                    <div class="tokens-tooltip">100K tokens = approx. 15K AI words or 30 images or 50 quotes</div>
                                                 </div>
                                             </div>
                                             <p class="text-xs text-gray-500 mt-2 text-center">Overage: $0.012 / 1K tokens</p>
 
                                             <ul>
-                                                <li><span class="check">✔</span> GPT-4o + Claude Access</li>
-                                                <li><span class="check">✔</span> Up to 3 Users / 10 Projects</li>
-                                                <li><span class="check">✔</span> Full CRM (500 contacts)</li>
-                                                <li><span class="check">✔</span> Advanced Invoicing + Reports</li>
-                                                <li><span class="check">✔</span> Basic eSignature</li>
+                                                <li>👉 GPT-4o + Claude Access</li>
+                                                <li>👉 Up to 3 Users / 10 Projects</li>
+                                                <li>👉 Full CRM (500 contacts)</li>
+                                                <li>👉 Advanced Invoicing + Reports</li>
+                                                <li>👉 Basic eSignature</li>
                                             </ul>
                                             
                                             <button>Grow Your Team – $79/mo</button>
@@ -567,21 +655,23 @@
                                             <div class="plan-badge">🚀 For High-Volume Contractors & Agencies</div>
                                             <h3>Premium</h3>
                                             <p class="price" id="premium-price-mobile">$149<span>/month</span></p>
+                                            <p class="text-xs text-gray-500 mt-2 text-center">Billed monthly – cancel anytime</p>
                                             
                                             <div class="tooltip-container" data-tooltip="1.5M tokens = approx. 225K AI words or 450 images or 750 quotes.">
                                                 <div class="tokens-info">
                                                     <div class="tokens-amount">1.5M AI Tokens</div>
                                                     <div class="tokens-label">~3,000 quotes + premium features</div>
+                                                    <div class="tokens-tooltip">100K tokens = approx. 15K AI words or 30 images or 50 quotes</div>
                                                 </div>
                                             </div>
                                             <p class="text-xs text-gray-500 mt-2 text-center">Overage: $0.01 / 1K tokens</p>
 
                                             <ul>
-                                                <li><span class="check">✔</span> All AI Models + Image Tools</li>
-                                                <li><span class="check">✔</span> Up to 15 Users / 50 Projects</li>
-                                                <li><span class="check">✔</span> Advanced CRM (Unlimited)</li>
-                                                <li><span class="check">✔</span> Full eSignature + Branded Docs</li>
-                                                <li><span class="check">✔</span> White-Label Reports</li>
+                                                <li>👉 All AI Models + Image Tools</li>
+                                                <li>👉 Up to 15 Users / 50 Projects</li>
+                                                <li>👉 Advanced CRM (Unlimited)</li>
+                                                <li>👉 Full eSignature + Branded Docs</li>
+                                                <li>👉 White-Label Reports</li>
                                             </ul>
                                             
                                             <button>Scale Fast – $149/mo</button>
@@ -599,21 +689,23 @@
                                             <div class="plan-badge">🏢 Custom AI Solutions for Large Teams</div>
                                             <h3>Enterprise</h3>
                                             <p class="price" id="enterprise-price-mobile">$249<span>/month</span></p>
+                                            <p class="text-xs text-gray-500 mt-2 text-center">Billed monthly – cancel anytime</p>
                                             
                                             <div class="tooltip-container" data-tooltip="4M+ tokens = approx. 600K+ AI words or 1200+ images or 2000+ quotes.">
                                                 <div class="tokens-info">
                                                     <div class="tokens-amount">4M+ AI Tokens</div>
                                                     <div class="tokens-label">Unlimited usage + custom AI</div>
+                                                    <div class="tokens-tooltip">100K tokens = approx. 15K AI words or 30 images or 50 quotes</div>
                                                 </div>
                                             </div>
                                             <p class="text-xs text-gray-500 mt-2 text-center">Overage: $0.008 / 1K tokens</p>
 
                                             <ul>
-                                                <li><span class="check">✔</span> Custom AI Models + API Access</li>
-                                                <li><span class="check">✔</span> 50+ Users / Unlimited Projects</li>
-                                                <li><span class="check">✔</span> Enterprise CRM Integration</li>
-                                                <li><span class="check">✔</span> White-Label Platform</li>
-                                                <li><span class="check">✔</span> Dedicated Account Manager</li>
+                                                <li>👉 Custom AI Models + API Access</li>
+                                                <li>👉 50+ Users / Unlimited Projects</li>
+                                                <li>👉 Enterprise CRM Integration</li>
+                                                <li>👉 White-Label Platform</li>
+                                                <li>👉 Dedicated Account Manager</li>
                                             </ul>
                                             
                                             <button>Let's Build Your AI Stack</button>
@@ -652,12 +744,14 @@
     <div id="featureModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
-            <h2>Complete Feature Comparison</h2>
+            <h2>Complete Plan Comparison</h2>
+            <p class="modal-description">Compare all features across our pricing plans to find the perfect fit for your needs.</p>
             <div class="overflow-x-auto">
                 <table class="comparison-table">
                     <thead>
                         <tr>
                             <th>Feature</th>
+                            <th>Free Trial</th>
                             <th>Starter</th>
                             <th>Pro</th>
                             <th>Premium</th>
@@ -667,20 +761,23 @@
                     <tbody>
                         <tr>
                             <td>Monthly Price (USD)</td>
+                            <td>$0</td>
                             <td>$39</td>
                             <td>$79</td>
                             <td>$149</td>
                             <td>$249</td>
                         </tr>
                         <tr>
-                            <td>Users Included</td>
-                            <td>1</td>
-                            <td>2</td>
-                            <td>5</td>
-                            <td>10</td>
+                            <td>Tokens Included</td>
+                            <td>25K</td>
+                            <td>100K</td>
+                            <td>500K</td>
+                            <td>1.5M</td>
+                            <td>4M+</td>
                         </tr>
                         <tr>
                             <td>Projects Limit</td>
+                            <td>1</td>
                             <td>2</td>
                             <td>10</td>
                             <td>50</td>
@@ -688,13 +785,15 @@
                         </tr>
                         <tr>
                             <td>Clients Limit</td>
-                            <td>2</td>
-                            <td>10</td>
+                            <td>1</td>
                             <td>50</td>
+                            <td>500</td>
+                            <td>Unlimited</td>
                             <td>Unlimited</td>
                         </tr>
                         <tr>
                             <td>Invoices Limit</td>
+                            <td>0</td>
                             <td>5</td>
                             <td>25</td>
                             <td>100</td>
@@ -703,8 +802,9 @@
                         <tr>
                             <td>GPT Access</td>
                             <td>GPT-3.5</td>
-                            <td>GPT-4, Claude</td>
-                            <td>GPT-4, Claude, DALL-E</td>
+                            <td>GPT-3.5 + Claude</td>
+                            <td>GPT-4o + Claude</td>
+                            <td>GPT-4o + Claude, DALL-E</td>
                             <td>All AI Models</td>
                         </tr>
                         <tr>
@@ -713,9 +813,11 @@
                             <td>Yes</td>
                             <td>Yes</td>
                             <td>Yes</td>
+                            <td>Yes</td>
                         </tr>
                         <tr>
                             <td>eSign + Forms</td>
+                            <td>No</td>
                             <td>Yes</td>
                             <td>Yes</td>
                             <td>Yes</td>
@@ -725,25 +827,21 @@
                             <td>Image/Video/TTS Tools</td>
                             <td>No</td>
                             <td>Basic</td>
+                            <td>Standard</td>
                             <td>HD</td>
                             <td>HD + AI Video</td>
                         </tr>
                         <tr>
-                            <td>API Access / White-Labeling</td>
+                            <td>API Access / White-Label</td>
+                            <td>No</td>
                             <td>No</td>
                             <td>No</td>
                             <td>Yes</td>
                             <td>Yes + Custom SLA</td>
                         </tr>
                         <tr>
-                            <td>Tokens Included (Monthly)</td>
-                            <td>100,000</td>
-                            <td>500,000</td>
-                            <td>1,500,000</td>
-                            <td>4,000,000</td>
-                        </tr>
-                        <tr>
                             <td>Token Overage Rate ($ per 1K)</td>
+                            <td>N/A</td>
                             <td>$0.015</td>
                             <td>$0.012</td>
                             <td>$0.01</td>
@@ -752,14 +850,16 @@
                         <tr>
                             <td>Team Access</td>
                             <td>-</td>
-                            <td>Up to 3</td>
-                            <td>Up to 10</td>
+                            <td>1</td>
+                            <td>3</td>
+                            <td>10</td>
                             <td>Unlimited</td>
                         </tr>
                         <tr>
                             <td>Support</td>
-                            <td>-</td>
-                            <td>-</td>
+                            <td>Email Support</td>
+                            <td>Priority Support</td>
+                            <td>Priority Support</td>
                             <td>Priority Support</td>
                             <td>Priority + VIP Support</td>
                         </tr>

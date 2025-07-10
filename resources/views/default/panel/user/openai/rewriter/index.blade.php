@@ -203,7 +203,6 @@
     <script src="{{ custom_theme_url('/assets/js/panel/openai_generator_workbook.js') }}"></script>
     <script src="{{ custom_theme_url('/assets/libs/wavesurfer/wavesurfer.js') }}"></script>
     <script>
-        const stream_type = '{!! $settings_two->openai_default_stream_server !!}';
         const openai_model = '{{ $setting->openai_default_model }}';
 
         function sendOpenaiGeneratorForm(ev) {

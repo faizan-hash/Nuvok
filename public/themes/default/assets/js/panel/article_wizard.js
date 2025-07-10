@@ -3,6 +3,7 @@ var keywordsCount = 0;
 var headersCount = 0;
 var linksCount = 0;
 var imagesCount = 0;
+var CUR_STATE = {};
 
 
 var keywords = [];
@@ -229,7 +230,6 @@ const UPDATE_STEP = 'UPDATE_STEP';
 const TOKENS = 'TOKENS';
 let intervalId = 0;
 
-let CUR_STATE;
 let isGenerating = false;
 
 $( '#article_wizard_setting_form' ).submit( function ( event ) {
@@ -351,7 +351,7 @@ function generateData() {
 		showLoading();
 		let wizardData = { ...CUR_STATE };
 		wizardData.topic_outline = $('#txtforoutline').val();
-		CUR_STATE = { ...wizardData };
+		CUR_STATE = { ...CUR_STATE };
 		updateData();
 		generateOutlines();
 	} else if (wizardData.current_step == 3) {
@@ -359,7 +359,7 @@ function generateData() {
 		showLoading();
 		let wizardData = { ...CUR_STATE };
 		wizardData.topic_image = $('#txtforimage').val();
-		CUR_STATE = { ...wizardData };
+		CUR_STATE = { ...CUR_STATE };
 		updateData();
 		generateImages();
 	}
@@ -718,10 +718,22 @@ function generateImages() {
 	const topic_image = $( '#txtforimage' ).val();
 	const image_cnt = Number( $( '#number_of_images' ).val() );
 	const size = $( '#size_of_images' ).val();
+	const wizardData = { ...CUR_STATE };
+
+	const csrfToken = $('meta[name="csrf-token"]').attr('content');
+	if (!csrfToken) {
+		toastr.error('Security token missing. Please refresh the page.');
+		isGenerating = false;
+		hideLoading();
+		return;
+	}
 
 	$.ajax( {
 		type: 'post',
 		url: '/dashboard/user/openai/articlewizard/genimages',
+		headers: {
+			'X-CSRF-TOKEN': csrfToken
+		},
 		data: {
 			id: ( { ...CUR_STATE } ).id,
 			prompt: topic_image,
@@ -730,21 +742,28 @@ function generateImages() {
 			count: image_cnt,
 			size
 		},
+		beforeSend: function() {
+			isGenerating = true;
+			Alpine.store('appLoadingIndicator').show();
+		},
 		success: function ( data ) {
 			isGenerating = false;
 			const wizardData = { ...CUR_STATE };
 			wizardData.topic_image = topic_image;
 
-			let extra_image = data;
 			let temp;
 			if ( wizardData.extra_images == '' ) {
 				temp = [];
 			} else {
 				temp = JSON.parse( wizardData.extra_images );
 			}
-			data.path.map( path => {
-				temp.push( { path, storage: image_storage } );
-			} );
+			
+			if (data.path && Array.isArray(data.path)) {
+				data.path.map( path => {
+					temp.push( { path, storage: typeof image_storage !== 'undefined' ? image_storage : 'public' } );
+				} );
+			}
+			
 			wizardData.extra_images = JSON.stringify( Array.from( new Set( [ ...temp ] ) ) );
 
 			CUR_STATE = { ...wizardData };
@@ -756,10 +775,13 @@ function generateImages() {
 
 		},
 		error: function ( data ) {
-			console.log( data );
 			isGenerating = false;
 			Alpine.store('appLoadingIndicator').hide();
-			toastr.error( data.responseJSON.message );
+			if (data.responseJSON && data.responseJSON.message) {
+				toastr.error( data.responseJSON.message );
+			} else {
+				toastr.error('Failed to generate images. Please try again.');
+			}
 			updateData();
 		}
 	} );
@@ -778,6 +800,12 @@ async function generateArticle() {
 
 	if ( !length ) {
 		length = 400;
+	}
+
+	// Add error handling for CUR_STATE
+	if (!CUR_STATE || !CUR_STATE.id) {
+		toastr.error('Article wizard state is not properly initialized. Please refresh the page and try again.');
+		return;
 	}
 
 	isGenerating = true;
@@ -843,7 +871,7 @@ async function generateArticle() {
 	$( '#stop_generating' ).on( 'click', stopGenerating );
 
 	if ( stream_type == 'backend' ) {
-		eventSource = new EventSource( `${ '/dashboard/user/openai/articlewizard/genarticle' }/?language=${ language }&id=${ CUR_STATE.id }&length=${ length }` );
+		eventSource = new EventSource( `/dashboard/user/openai/articlewizard/genarticle?language=${ encodeURIComponent(language) }&id=${ CUR_STATE.id }&length=${ length }` );
 		eventSource.addEventListener( 'data', function ( event ) {
 			const data = JSON.parse( event.data );
 			if ( data.message !== null )
@@ -860,13 +888,16 @@ async function generateArticle() {
 			clearInterval( nIntervId );
 			streaming = false;
 			isGenerating = false;
-			CUR_STATE.current_step = 3;
+			if (CUR_STATE && typeof CUR_STATE === 'object') {
+				CUR_STATE.current_step = 3;
+				uploadDatabase( STEP );
+				updateData();
+			}
 			Alpine.store('appLoadingIndicator').hide();
-			uploadDatabase( STEP );
-			updateData();
 		} );
 	} else {
 		let asyncGenerate = async () => {
+			const wizardData = { ...CUR_STATE };
 			const response = await fetch( atob( guest_id ), {
 				method: 'POST',
 				headers: {
@@ -1127,7 +1158,7 @@ function updateData() {
 	const steps = document.querySelector('.lqd-steps');
 	const stepButtons = steps.querySelectorAll('.step');
 
-	wizardData = { ...CUR_STATE };
+	let wizardData = { ...CUR_STATE };
 
 	stepButtons.forEach((btn, i) => {
 		btn.classList.remove('active', 'active-prev');
